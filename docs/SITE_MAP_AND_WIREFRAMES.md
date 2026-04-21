@@ -94,10 +94,10 @@ Mobile: nav collapses to drawer (focus trap via Escape + backdrop click).
 
 The implemented stylesheet (`assets/css/site.css`) **is** the high-fidelity reference.
 
-- **Light mode:** warm stone surfaces (`#fafaf9`, `#ffffff`), near-black text (`#0c0a09`), teal accent (`#0d9488`).
-- **Dark mode:** deep stone background (`#0c0a09`), elevated cards (`#1c1917`), brighter teal accent (`#2dd4bf`) for WCAG contrast on borders and links.
-- **Typography:** `Fraunces` (display / humanist serif feel) + `Source Sans 3` (neutral body). Fluid sizes via `clamp()` on `:root` tokens.
-- **Shape:** rounded cards (`12–20px`), soft shadows, generous vertical rhythm (`--space-*`).
+- **Light mode:** neutral surfaces (`#fafafa`, `#ffffff`), near-black text (`#0a0a0a` / `#262626`), no chromatic accent — borders and weight carry hierarchy.
+- **Dark mode:** near-black background (`#0a0a0a`), cards (`#171717`), light text on dark with the same monochrome rules.
+- **Typography:** `Inter` at **400 / 600 / 700** only; fluid sizes via `clamp()` on `:root` tokens; headings and body share one family.
+- **Shape:** rounded cards (`10–16px`), flat surfaces (no drop shadows), generous vertical rhythm (`--space-*`, `--space-12` between major sections).
 
 Exporting PNG/Figma files was not required for code delivery; open any HTML file in a browser and toggle the sun/moon control to review both themes.
 

@@ -211,9 +211,7 @@
                     : c === "creative"
                       ? "Creative"
                       : c;
-              var cls =
-                c === "product" ? "tag tag--pm" : c === "data" ? "tag tag--data" : c === "creative" ? "tag tag--creative" : "tag";
-              return '<span class="' + cls + '">' + label + "</span>";
+              return '<span class="tag">' + label + "</span>";
             })
             .join("");
 
@@ -351,12 +349,12 @@
 
       if (!valid) {
         e.preventDefault();
-        showStatus("error", "Fix the highlighted fields, then try again.");
+        showStatus("error", "Error: fix the highlighted fields, then try again.");
         syncSubmitDisabled();
         return;
       }
 
-      showStatus("ok", "Submitting… You will leave this site to confirm delivery with the form provider.");
+      showStatus("ok", "Success: submitting… you will leave this site to confirm delivery with the form provider.");
     });
   }
 

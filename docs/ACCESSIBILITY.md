@@ -6,8 +6,8 @@ This document records the accessibility posture of the static portfolio as of th
 
 | Area | Status |
 |------|--------|
-| Contrast (light / dark) | Design tokens tuned for body copy on `--surface-0` / `--surface-1`; placeholders use `#767676` (light) and a lighter neutral (dark) with `opacity: 1`. |
-| Use of colour (1.4.1) | Filter chips use label text plus active underline / inset shadow; links use underline offset on hover; `:visited` uses dedicated colours, not colour alone. |
+| Contrast (light / dark) | Monochrome neutrals: `--text-0` / `--text-1` / `--text-2` on `--surface-*`; placeholders `#767676` (light) and `#b3b3b3` (dark) with `opacity: 1`. |
+| Use of colour (1.4.1) | No chromatic accent; filter “on” state uses **fill + underline + label text**; form feedback uses **border weight/pattern** plus “Error:” / “Success:” copy; links use underline on hover and distinct `:visited` greys. |
 | Forms | Visible `<label>` + `for`/`id`; intro copy for required fields; client-side validation with `[data-form-live]` `aria-live` region; submit disabled until required fields + email pattern valid. |
 | Images | Meaningful `alt` on informative images; decorative patterns use `alt=""` where appropriate. |
 | Keyboard / focus | Skip link; visible `:focus-visible` styles; mobile drawer with `aria-expanded` / `aria-controls` / focus trap patterns in `site.js`. |
@@ -19,12 +19,12 @@ This document records the accessibility posture of the static portfolio as of th
 
 **Body text**
 
-- Light: `--text-1` `#3f3a36` and `--text-2` `#49423d` on `#ffffff` / `#fafaf9` — intended to meet **≥ 4.5:1** for normal text.
-- Dark: `--text-1` `#e7e5e4`, `--text-2` `#d6d3d1` on `#0c0a09` / `#1c1917` — tuned so small secondary copy stays above **4.5:1** on primary surfaces.
+- Light: `--text-1` `#262626`, `--text-2` `#404040` on `#ffffff` / `#fafafa` — targets **≥ 4.5:1** for normal text.
+- Dark: `--text-1` `#e5e5e5`, `--text-2` `#d4d4d4` on `#0a0a0a` / `#171717` — tuned for **≥ 4.5:1** on primary surfaces.
 
-**Interactive / accent**
+**Interactive**
 
-- Teal accent on white/dark surfaces: verify large headings and small UI labels per **3:1** / **4.5:1** as applicable; focus rings use semi-transparent accent strokes for visibility.
+- Focus: `box-shadow: var(--focus-ring)` uses a double ring (surface + ink) for visibility without hue.
 
 **Placeholders**
 
@@ -36,7 +36,7 @@ This document records the accessibility posture of the static portfolio as of th
 
 ## Use of colour (1.4.1)
 
-- **Project filters:** Category text always present; active state adds **underline** and **inset shadow**, not only hue change.
+- **Project filters:** Category labels always visible; pressed state uses **dark fill + light text + underline**, not hue alone.
 - **Links:** Global and footer links gain **underline** on hover; visited state uses `--link-visited` tokens distinct from default.
 - **Buttons:** Disabled state uses reduced opacity **and** `cursor: not-allowed`; primary/ghost variants differ by border/fill, not only colour.
 

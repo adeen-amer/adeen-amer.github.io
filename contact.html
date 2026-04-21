@@ -89,34 +89,44 @@
       </section>
 
       <section class="reveal" aria-labelledby="form-heading">
-        <h2 id="form-heading" class="sr-only">Contact form</h2>
+        <h2 id="form-heading">Send a message</h2>
+        <p class="form-intro" id="form-intro">Fields marked with <span aria-hidden="true">*</span><span
+            class="sr-only">asterisk</span> are required. I aim to reply within two business days. Use the examples in
+          grey as a format guide only — your answers stay in the labelled fields.</p>
+
         <form class="form-grid" data-contact-form action="https://formsubmit.co/adeenamer0@gmail.com" method="post"
-          novalidate>
+          novalidate aria-describedby="form-intro">
           <input type="text" name="_honey" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_template" value="table">
 
-          <p class="form-status" data-form-status hidden role="status"></p>
+          <div class="form-live" data-form-live aria-live="polite" aria-atomic="true"></div>
+          <p class="form-status" data-form-status hidden></p>
 
           <div class="form-grid form-grid--2">
             <div class="field">
-              <label for="contact-name">Name <span aria-hidden="true">*</span></label>
-              <input id="contact-name" name="name" type="text" autocomplete="name" required aria-required="true">
+              <label for="contact-name">Full name <span aria-hidden="true">*</span></label>
+              <input id="contact-name" name="name" type="text" autocomplete="name" required aria-required="true"
+                placeholder="Example: Adeen Amer">
             </div>
             <div class="field">
-              <label for="contact-email">Email <span aria-hidden="true">*</span></label>
-              <input id="contact-email" name="email" type="email" autocomplete="email" required aria-required="true">
+              <label for="contact-email">Email address <span aria-hidden="true">*</span></label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" required aria-required="true"
+                placeholder="Example: name@domain.com" inputmode="email">
             </div>
           </div>
           <div class="field">
             <label for="contact-subject">Subject <span aria-hidden="true">*</span></label>
-            <input id="contact-subject" name="subject" type="text" required aria-required="true">
+            <input id="contact-subject" name="subject" type="text" required aria-required="true"
+              placeholder="Example: Product role — intro call">
           </div>
           <div class="field">
             <label for="contact-message">Message <span aria-hidden="true">*</span></label>
-            <textarea id="contact-message" name="message" required aria-required="true"></textarea>
+            <textarea id="contact-message" name="message" required aria-required="true"
+              placeholder="Example: Context, timing, and what you would like to discuss."></textarea>
           </div>
-          <button class="btn btn--primary" type="submit">Send message</button>
+          <button class="btn btn--primary" type="submit" id="contact-submit" data-contact-submit disabled
+            aria-disabled="true">Send message</button>
         </form>
       </section>
     </div>

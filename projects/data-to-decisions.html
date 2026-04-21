@@ -82,10 +82,10 @@
         narratives executives can repeat.</p>
     </header>
 
-    <figure class="reveal"
-      style="margin: var(--space-6) 0; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border);">
+    <figure class="figure-block reveal">
       <img src="../assets/img/masonry-portfolio/portfolio-4.png" width="1200" height="750"
-        alt="Financial dashboard with charts for revenue and segments." loading="eager">
+        alt="Dashboard mock-up: revenue trend line and segment breakdown charts." loading="eager">
+      <figcaption>Example executive view: first screen answers “are we healthy?” before drill-downs.</figcaption>
     </figure>
 
     <dl class="case-meta reveal">
@@ -104,20 +104,36 @@
     </dl>
 
     <article class="prose reveal">
-      <h2>Executive dashboards</h2>
-      <p>I structure views so the first screen answers “are we healthy?” and drill-downs preserve context instead of
-        dumping tables.</p>
-      <h2 id="forecasting">Sales forecasting</h2>
-      <p>During my sales internship at PEL, I built Python and Power BI models to stress-test pricing scenarios. The
-        hardest part was not the regression—it was explaining variance drivers to teams who do not live in notebooks.
+      <h2>Problem statement</h2>
+      <p>Leaders receive charts they cannot act on: too many series, unclear ownership or no tie to the next decision.
+        My job is to translate analysis into narratives people repeat in rooms where laptops stay closed.</p>
+
+      <h2>Situation &amp; task</h2>
+      <p><strong>Situation:</strong> Mixed audiences — finance, sales and product — each with different mental models.
+        <strong>Task:</strong> Build dashboards and forecasts that change prioritisation, not slide decks that age out.
       </p>
+
+      <h2>Executive dashboards</h2>
+      <p>I structure views so the first screen answers “are we healthy?” Drill-downs preserve context instead of
+        dumping raw tables. I delete metrics that fail the “so what in two weeks?” test.</p>
+
+      <h2 id="forecasting">Sales forecasting (PEL)</h2>
+      <p><strong>Situation:</strong> Short internship window with messy regional sales exports.
+        <strong>Task:</strong> Stress-test pricing scenarios for leadership.
+        <strong>Action:</strong> Python and Power BI pipelines, documented assumptions, sensitivity bands instead of
+        false precision.
+        <strong>Result:</strong> Planning conversations referenced the outputs; exact revenue lift is proprietary, but
+        the vocabulary around elasticity sharpened.</p>
       <ul>
-        <li>Automated ingestion where possible; documented assumptions for handoffs.</li>
-        <li>Packaged recommendations with sensitivity bands, not false precision.</li>
+        <li>Hardest part was not regression — it was explaining variance drivers to teams who do not live in
+          notebooks.</li>
+        <li>Automated ingestion where possible so the next analyst inherits a trail, not a mystery.</li>
       </ul>
-      <h2>Results</h2>
-      <p>Leadership used the outputs in quarterly planning conversations; exact revenue lift is proprietary, but the
-        work sharpened how we talked about price elasticity.</p>
+
+      <h2>Lessons</h2>
+      <p>Packaging matters as much as the model. A band chart with a one-paragraph story beats a precise point estimate
+        nobody trusts.</p>
+
       <p><a class="btn btn--ghost" href="../projects.html">← All projects</a> <a class="btn btn--primary"
           href="../contact.html">Collaborate on analytics</a></p>
     </article>

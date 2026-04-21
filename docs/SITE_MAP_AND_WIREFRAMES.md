@@ -113,11 +113,11 @@ Issues addressed in this redesign:
 | Portfolio tiles all pointed to one generic detail page | Distinct case study URLs per project (legacy `portfolio-details.html` removed) |
 | Empty / generic `alt` on images | Descriptive alt text on key visuals |
 | Inconsistent contact phone between sections | Consolidated on contact page with email-first |
-| Testimonials commented / lorem | New illustrative quotes + note to replace with permissioned refs |
+| Testimonials commented / lorem | Section removed until permissioned quotes exist |
 | Services cards linked to `#` | Removed; capabilities live in Skills + case studies |
 | No privacy policy | `privacy.html` |
 | No `robots.txt` / `sitemap.xml` | Added at site root |
 | No dark mode | `data-theme` + toggle + `prefers-color-scheme` |
 | Motion-heavy template defaults | `prefers-reduced-motion` respected in CSS and JS |
 
-Optional future content: named testimonials, certificate images, PDF résumé, analytics snippet, Markdown-based posts.
+Optional future content: named testimonials, certificate images, analytics snippet, additional insight posts. PDF résumé and static insight posts are live.

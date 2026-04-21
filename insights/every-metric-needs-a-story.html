@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Every metric needs a story — Adeen Amer</title>
+  <meta name="description"
+    content="Pair charts with decisions, owners and cadence so analytics actually change behaviour.">
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <meta property="og:title" content="Every metric needs a story">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://adeen-amer.github.io/insights/every-metric-needs-a-story.html">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a class="logo" href="../index.html">Adeen Amer</a>
+      <nav class="nav-desktop" aria-label="Primary">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../skills.html">Skills &amp; tools</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../experience.html">Experience</a>
+        <a href="../insights.html" aria-current="page">Insights</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light or dark mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 3v1M12 20v1M4.22 4.22l.7.7M18.36 18.36l.7.7M1 12h1M22 12h1M4.22 19.78l.7-.7M18.36 5.64l.7-.7" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </button>
+        <button type="button" class="nav-toggle" data-nav-open aria-expanded="false" aria-controls="mobile-drawer"
+          aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer" data-mobile-drawer aria-hidden="true">
+    <div class="mobile-drawer__backdrop" data-nav-close tabindex="-1"></div>
+    <div class="mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <nav class="mobile-nav" aria-label="Mobile primary">
+        <a href="../index.html" data-nav-close>Home</a>
+        <a href="../about.html" data-nav-close>About</a>
+        <a href="../skills.html" data-nav-close>Skills &amp; tools</a>
+        <a href="../projects.html" data-nav-close>Projects</a>
+        <a href="../experience.html" data-nav-close>Experience</a>
+        <a href="../insights.html" data-nav-close aria-current="page">Insights</a>
+        <a href="../contact.html" data-nav-close>Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../insights.html">Insights</a></li>
+        <li aria-current="page">Every metric needs a story</li>
+      </ol>
+    </nav>
+
+    <article class="prose reveal">
+      <header>
+        <p class="eyebrow">Data &amp; decisions · ~3 min read</p>
+        <h1>Every metric needs a story</h1>
+        <p class="insight-card__meta"><time datetime="2026-03-15">15 March 2026</time></p>
+      </header>
+
+      <p>Dashboards fail when nobody can act on them. A chart without a decision is wallpaper. I treat every metric as a
+        contract between data and leadership: what we measure, who owns the response and how often we review it.</p>
+
+      <h2>The three lines I add next to every chart</h2>
+      <ol>
+        <li><strong>Decision:</strong> What changes if this number moves up or down?</li>
+        <li><strong>Owner:</strong> Who has authority to act in the next sprint — not “the team,” a name.</li>
+        <li><strong>Cadence:</strong> Weekly, monthly or milestone-bound; “when someone asks” is not a cadence.</li>
+      </ol>
+
+      <h2>Why vanity metrics creep in</h2>
+      <p>They are easy to instrument and politically safe. I push back by asking for the counterfactual: if we ignore
+        this metric for a month, what breaks? If the answer is “nothing,” we delete it from the executive view.</p>
+
+      <h2>Takeaway</h2>
+      <p>If a number cannot change how we spend the next sprint, it is vanity, not signal. Stories keep metrics honest.
+      </p>
+
+      <p><a class="btn btn--ghost" href="../insights.html">← All insights</a> <a class="btn btn--primary"
+          href="../contact.html">Get in touch</a></p>
+    </article>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+      <div>
+        <strong>Adeen Amer</strong>
+        <p class="lede" style="margin-top: var(--space-3);">Product manager · Lahore, Pakistan</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../insights.html">All insights</a>
+        <a href="../contact.html">Contact</a>
+        <a href="../privacy.html">Privacy</a>
+      </nav>
+      <p class="copyright">© <span id="y"></span> Adeen Amer.</p>
+    </div>
+  </footer>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+  <script src="../assets/js/site.js" defer></script>
+</body>
+
+</html>

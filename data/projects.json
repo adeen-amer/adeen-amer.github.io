@@ -37,15 +37,6 @@
       "imageAlt": "Financial analytics dashboard visualisation"
     },
     {
-      "id": "forecasting",
-      "title": "Sales forecasting",
-      "tagline": "Python and Power BI models that informed pricing strategy.",
-      "categories": ["data"],
-      "thumb": "assets/img/masonry-portfolio/portfolio-8.png",
-      "href": "projects/data-to-decisions.html#forecasting",
-      "imageAlt": "Sales trend charts and forecast outputs"
-    },
-    {
       "id": "creative",
       "title": "Creative production",
       "tagline": "Music, motion and live experiences for engaged audiences.",

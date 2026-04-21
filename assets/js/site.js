@@ -252,13 +252,25 @@
     if (!form) return;
 
     var statusEl = form.querySelector("[data-form-status]");
+    var liveEl = form.querySelector("[data-form-live]");
+    var submitBtn = form.querySelector("[data-contact-submit]");
+
+    function announce(msg, polite) {
+      if (!liveEl) return;
+      liveEl.setAttribute("aria-live", polite ? "polite" : "assertive");
+      liveEl.textContent = "";
+      setTimeout(function () {
+        liveEl.textContent = msg;
+      }, 50);
+    }
 
     function showStatus(type, message) {
       if (!statusEl) return;
       statusEl.textContent = message;
       statusEl.hidden = false;
       statusEl.className = "form-status form-status--" + type;
-      statusEl.setAttribute("role", "alert");
+      statusEl.setAttribute("role", type === "error" ? "alert" : "status");
+      announce(message, type !== "error");
     }
 
     function clearFieldErrors() {
@@ -267,6 +279,7 @@
       });
       form.querySelectorAll("[aria-invalid]").forEach(function (input) {
         input.removeAttribute("aria-invalid");
+        input.removeAttribute("aria-describedby");
       });
     }
 
@@ -279,6 +292,34 @@
       input.setAttribute("aria-describedby", err.id);
       input.parentNode.appendChild(err);
     }
+
+    function formIsValid() {
+      var name = form.querySelector("#contact-name");
+      var email = form.querySelector("#contact-email");
+      var subject = form.querySelector("#contact-subject");
+      var message = form.querySelector("#contact-message");
+      if (!name || !email || !subject || !message) return false;
+      var em = email.value.trim();
+      return (
+        name.value.trim().length > 0 &&
+        subject.value.trim().length > 0 &&
+        message.value.trim().length > 0 &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)
+      );
+    }
+
+    function syncSubmitDisabled() {
+      if (!submitBtn) return;
+      var ok = formIsValid();
+      submitBtn.disabled = !ok;
+      submitBtn.setAttribute("aria-disabled", ok ? "false" : "true");
+    }
+
+    form.querySelectorAll("input, textarea").forEach(function (el) {
+      el.addEventListener("input", syncSubmitDisabled);
+      el.addEventListener("blur", syncSubmitDisabled);
+    });
+    syncSubmitDisabled();
 
     form.addEventListener("submit", function (e) {
       clearFieldErrors();
@@ -311,6 +352,7 @@
       if (!valid) {
         e.preventDefault();
         showStatus("error", "Fix the highlighted fields, then try again.");
+        syncSubmitDisabled();
         return;
       }
 

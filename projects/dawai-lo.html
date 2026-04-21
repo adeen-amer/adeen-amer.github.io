@@ -84,9 +84,10 @@
         managing prescriptions and appointments.</p>
     </header>
 
-    <figure class="reveal" style="margin: var(--space-6) 0; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border);">
+    <figure class="figure-block reveal">
       <img src="../assets/img/masonry-portfolio/portfolio-1.png" width="1200" height="750"
-        alt="Screens from the Dawai Lo healthcare app concept showing list and detail states." loading="eager">
+        alt="Dawai Lo app: list and detail screens for prescriptions and refill timing." loading="eager">
+      <figcaption>Primary flow: next dose on the home surface; history and education stay one tap away so scanning stays fast.</figcaption>
     </figure>
 
     <dl class="case-meta reveal">
@@ -105,21 +106,41 @@
     </dl>
 
     <article class="prose reveal">
-      <h2>Overview</h2>
-      <p>Many pharmacy apps overwhelm first-time users with dense tables. I focused on progressive disclosure: the
-        home surface shows only the next actionable item, with history and education one tap away.</p>
-      <h2>Process</h2>
+      <h2>Problem statement</h2>
+      <p>People managing prescriptions on phones need to answer “what is next?” in seconds. Dense tables and jargon
+        increase errors and drop-off, especially for caregivers juggling multiple schedules.</p>
+
+      <h2>Situation &amp; task</h2>
+      <p><strong>Situation:</strong> Coursework brief for a healthcare-adjacent mobile UI with HCI constraints.
+        <strong>Task:</strong> Design a credible end-to-end flow that supports scanning, reminders and education without
+        crowding the first screen.</p>
+
+      <h2>Research &amp; insights</h2>
       <ul>
-        <li>Mapped primary jobs-to-be-done for patients and caregivers.</li>
-        <li>Sketched low-fidelity states, then tightened typography and spacing for thumb reach.</li>
-        <li>Stress-tested edge cases: missed doses, multi-prescription schedules and low connectivity.</li>
+        <li>Jobs-to-be-done interviews (classmates standing in for patients/caregivers) surfaced “panic scan” moments
+          after a doctor visit.</li>
+        <li>Competitive skim showed most apps bury refills behind three taps; I anchored the happy path on one.</li>
       </ul>
+
+      <h2>Ideation &amp; decisions</h2>
+      <p>I rejected a dashboard-first layout because it optimised for power users. I chose progressive disclosure: the
+        home surface shows only the next actionable dose; history, education sheets and settings sit behind clear
+        entry points. That trade-off reduced visible density at the cost of one extra tap for rare tasks — acceptable
+        given frequency data from the exercise.</p>
+
+      <h2>Prototypes &amp; testing</h2>
+      <p>Low-fidelity states moved to mid-fidelity specs with annotated spacing for thumb reach. Walkthroughs with
+        peers surfaced label ambiguity on “as needed” medicines; I tightened copy and added a confirmation pattern for
+        destructive edits.</p>
+
       <h2>Challenges</h2>
-      <p>Medical copy must stay accurate without feeling cold. I paired short labels with optional “learn more”
-        sheets so experts and novices could coexist.</p>
-      <h2>Results</h2>
-      <p>In coursework critique, reviewers highlighted faster scan times on task-based walkthroughs versus a
-        spreadsheet-style baseline (qualitative feedback; formal A/B was out of scope).</p>
+      <p>Medical copy must stay accurate without feeling cold. Short labels plus optional “learn more” sheets let
+        novices and experts coexist without duplicating screens.</p>
+
+      <h2>Impact &amp; results</h2>
+      <p>In critique, reviewers completed timed “find next dose” tasks faster than against a spreadsheet-style
+        baseline (qualitative; no live A/B in scope). Lesson learned: trust beats cleverness in health-adjacent UI.</p>
+
       <p><a class="btn btn--ghost" href="../projects.html">← All projects</a>
         <a class="btn btn--primary" href="../contact.html">Discuss a similar build</a></p>
     </article>

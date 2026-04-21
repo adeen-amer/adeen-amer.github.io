@@ -1,0 +1,9 @@
+{
+  "name": "adeen-amer-portfolio",
+  "private": true,
+  "description": "Static GitHub Pages portfolio — build verifies required files exist.",
+  "scripts": {
+    "build": "node scripts/verify-build.js",
+    "preview": "npx --yes serve . -l tcp://127.0.0.1:4173 --no-clipboard"
+  }
+}

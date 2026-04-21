@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy — Adeen Amer</title>
+  <meta name="description" content="Privacy policy for adeen-amer.github.io: contact form, analytics and hosting.">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600&family=Source+Sans+3:ital,wght@0,400;0,600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <meta property="og:title" content="Privacy — Adeen Amer">
+  <meta property="og:url" content="https://adeen-amer.github.io/privacy.html">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a class="logo" href="index.html">Adeen Amer</a>
+      <nav class="nav-desktop" aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills &amp; tools</a>
+        <a href="projects.html">Projects</a>
+        <a href="experience.html">Experience</a>
+        <a href="insights.html">Insights</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light or dark mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 3v1M12 20v1M4.22 4.22l.7.7M18.36 18.36l.7.7M1 12h1M22 12h1M4.22 19.78l.7-.7M18.36 5.64l.7-.7" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </button>
+        <button type="button" class="nav-toggle" data-nav-open aria-expanded="false" aria-controls="mobile-drawer"
+          aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer" data-mobile-drawer aria-hidden="true">
+    <div class="mobile-drawer__backdrop" data-nav-close tabindex="-1"></div>
+    <div class="mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <nav class="mobile-nav" aria-label="Mobile primary">
+        <a href="index.html" data-nav-close>Home</a>
+        <a href="about.html" data-nav-close>About</a>
+        <a href="skills.html" data-nav-close>Skills &amp; tools</a>
+        <a href="projects.html" data-nav-close>Projects</a>
+        <a href="experience.html" data-nav-close>Experience</a>
+        <a href="insights.html" data-nav-close>Insights</a>
+        <a href="contact.html" data-nav-close>Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main" class="prose">
+    <h1>Privacy policy</h1>
+    <p><time datetime="2026-04-20">Last updated: 20 April 2026</time></p>
+    <p>This static site is hosted on GitHub Pages. No account is required to browse. I do not run first-party cookies
+      for tracking on the pages as shipped; you may optionally add privacy-respecting analytics later (see below).
+    </p>
+    <h2>Contact form</h2>
+    <p>Messages submitted through the contact form are processed by FormSubmit (third party) and delivered to my
+      email. That provider may log technical metadata required to operate email delivery. Do not include sensitive
+      personal data you would not send by email.</p>
+    <h2>Theme preference</h2>
+    <p>Light or dark mode may be stored in your browser’s <code>localStorage</code> under the key
+      <code>adeen-theme</code>. No personal identifiers are stored.</p>
+    <h2>Optional analytics</h2>
+    <p>If you add Plausible, Google Analytics or similar, update this section with the vendor name, data collected and
+      retention. Until then, none is enabled in the template.</p>
+    <h2>Your rights</h2>
+    <p>Depending on your jurisdiction you may have rights to access, correct or delete personal data I hold from our
+      correspondence. Email <a href="mailto:adeenamer0@gmail.com">adeenamer0@gmail.com</a> for requests.</p>
+    <p><a href="index.html">← Back to home</a></p>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+      <div>
+        <strong>Adeen Amer</strong>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="contact.html">Contact</a>
+        <a href="index.html">Home</a>
+      </nav>
+      <p class="copyright">© <span id="y"></span> Adeen Amer.</p>
+    </div>
+  </footer>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+  <script src="assets/js/site.js" defer></script>
+</body>
+
+</html>

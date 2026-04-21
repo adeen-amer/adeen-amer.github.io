@@ -1,0 +1,58 @@
+{
+  "projects": [
+    {
+      "id": "dawai-lo",
+      "title": "Dawai Lo",
+      "tagline": "Healthcare mobile experience — research through UI craft.",
+      "categories": ["product", "creative"],
+      "thumb": "assets/img/masonry-portfolio/portfolio-1.png",
+      "href": "projects/dawai-lo.html",
+      "imageAlt": "Dawai Lo healthcare app interface mockups"
+    },
+    {
+      "id": "marketplace",
+      "title": "Marketplace seller experience",
+      "tagline": "Shipping clarity and trust on high-volume listing flows.",
+      "categories": ["product"],
+      "thumb": "assets/img/masonry-portfolio/portfolio-5.png",
+      "href": "projects/marketplace-experience.html",
+      "imageAlt": "E-commerce seller dashboard concept"
+    },
+    {
+      "id": "discovery",
+      "title": "Discovery to delivery",
+      "tagline": "Roadmaps, backlogs and rituals that keep teams aligned.",
+      "categories": ["product"],
+      "thumb": "assets/img/masonry-portfolio/portfolio-2.png",
+      "href": "projects/product-discovery.html",
+      "imageAlt": "Product roadmap and backlog workshop artifacts"
+    },
+    {
+      "id": "data-decisions",
+      "title": "From data to decisions",
+      "tagline": "Dashboards, forecasting and narratives for stakeholders.",
+      "categories": ["data", "product"],
+      "thumb": "assets/img/masonry-portfolio/portfolio-4.png",
+      "href": "projects/data-to-decisions.html",
+      "imageAlt": "Financial analytics dashboard visualisation"
+    },
+    {
+      "id": "forecasting",
+      "title": "Sales forecasting",
+      "tagline": "Python and Power BI models that informed pricing strategy.",
+      "categories": ["data"],
+      "thumb": "assets/img/masonry-portfolio/portfolio-8.png",
+      "href": "projects/data-to-decisions.html#forecasting",
+      "imageAlt": "Sales trend charts and forecast outputs"
+    },
+    {
+      "id": "creative",
+      "title": "Creative production",
+      "tagline": "Music, motion and live experiences for engaged audiences.",
+      "categories": ["creative"],
+      "thumb": "assets/img/masonry-portfolio/portfolio-3.png",
+      "href": "projects/creative-production.html",
+      "imageAlt": "Music production session in digital audio workstation"
+    }
+  ]
+}

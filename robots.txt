@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adeen-amer.github.io/sitemap.xml

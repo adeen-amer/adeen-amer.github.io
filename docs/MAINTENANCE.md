@@ -18,12 +18,15 @@ To preview locally in a browser: **`npm run preview`** then open **http://127.0.
   "id": "my-slug",
   "title": "Visible title",
   "tagline": "One line value prop.",
+  "featured": false,
   "categories": ["product"],
   "thumb": "assets/img/.../file.png",
   "href": "projects/my-slug.html",
   "imageAlt": "Describe the thumbnail for screen readers."
 }
 ```
+
+Set `"featured": true` on up to three projects to show them on the home page.
 
 Categories must be space-separated tokens from: `product`, `data`, `creative` (used by the filter buttons).
 

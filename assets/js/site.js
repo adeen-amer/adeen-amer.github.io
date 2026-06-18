@@ -196,43 +196,7 @@
         var frag = document.createDocumentFragment();
 
         projects.forEach(function (p) {
-          var article = document.createElement("article");
-          article.className = "card project-card reveal";
-          article.setAttribute("data-project-card", "");
-          article.setAttribute("data-categories", (p.categories || []).join(" "));
-
-          var tags = (p.categories || [])
-            .map(function (c) {
-              var label =
-                c === "product"
-                  ? "Product"
-                  : c === "data"
-                    ? "Data"
-                    : c === "creative"
-                      ? "Creative"
-                      : c;
-              return '<span class="tag">' + label + "</span>";
-            })
-            .join("");
-
-          article.innerHTML =
-            '<a href="' +
-            escapeAttr(p.href || "#") +
-            '" class="card__media"><img src="' +
-            escapeAttr(p.thumb || "") +
-            '" alt="' +
-            escapeAttr(p.imageAlt || p.title || "Project") +
-            '" loading="lazy" width="640" height="400"></a><div class="card__body"><div class="tag-row">' +
-            tags +
-            '</div><h3><a class="card__link" href="' +
-            escapeAttr(p.href || "#") +
-            '">' +
-            escapeHtml(p.title || "Project") +
-            "</a></h3><p>" +
-            escapeHtml(p.tagline || "") +
-            "</p></div>";
-
-          frag.appendChild(article);
+          frag.appendChild(buildProjectCard(p, ""));
         });
 
         mount.appendChild(frag);
@@ -242,6 +206,81 @@
       .catch(function () {
         mount.innerHTML =
           '<p class="form-status form-status--error" role="alert">Projects could not be loaded. Please refresh the page.</p>';
+      });
+  }
+
+  function buildProjectCard(p, basePath) {
+    basePath = basePath || "";
+    var article = document.createElement("article");
+    article.className = "card project-card reveal";
+    article.setAttribute("data-project-card", "");
+    article.setAttribute("data-categories", (p.categories || []).join(" "));
+
+    var tags = (p.categories || [])
+      .map(function (c) {
+        var label =
+          c === "product"
+            ? "Product"
+            : c === "data"
+              ? "Data"
+              : c === "creative"
+                ? "Creative"
+                : c;
+        return '<span class="tag">' + label + "</span>";
+      })
+      .join("");
+
+    var href = escapeAttr(basePath + (p.href || "#"));
+    var thumb = escapeAttr(basePath + (p.thumb || ""));
+
+    article.innerHTML =
+      '<a href="' +
+      href +
+      '" class="card__media"><img src="' +
+      thumb +
+      '" alt="' +
+      escapeAttr(p.imageAlt || p.title || "Project") +
+      '" loading="lazy" width="640" height="400"></a><div class="card__body"><div class="tag-row">' +
+      tags +
+      '</div><h3><a class="card__link" href="' +
+      href +
+      '">' +
+      escapeHtml(p.title || "Project") +
+      "</a></h3><p>" +
+      escapeHtml(p.tagline || "") +
+      "</p></div>";
+
+    return article;
+  }
+
+  function initFeaturedProjects() {
+    var mount = document.querySelector("[data-featured-json]");
+    if (!mount) return;
+
+    var url = mount.getAttribute("data-featured-json");
+    if (!url) return;
+
+    fetch(url)
+      .then(function (r) {
+        if (!r.ok) throw new Error("Failed to load projects");
+        return r.json();
+      })
+      .then(function (data) {
+        var projects = (data.projects || []).filter(function (p) {
+          return p.featured;
+        });
+        var frag = document.createDocumentFragment();
+
+        projects.forEach(function (p) {
+          frag.appendChild(buildProjectCard(p, ""));
+        });
+
+        mount.appendChild(frag);
+        initScrollReveal();
+      })
+      .catch(function () {
+        mount.innerHTML =
+          '<p class="form-status form-status--error" role="alert">Featured projects could not be loaded.</p>';
       });
   }
 
@@ -362,6 +401,7 @@
   initMobileNav();
   initProjectFilters();
   initProjectsFromJson();
+  initFeaturedProjects();
   initScrollReveal();
   initContactForm();
 })();

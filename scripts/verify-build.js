@@ -19,6 +19,7 @@ const required = [
   "404.html",
   "insights/shipping-trust.html",
   "insights/every-metric-needs-a-story.html",
+  "projects/chordlift.html",
   "projects/dawai-lo.html",
   "projects/marketplace-experience.html",
   "projects/data-to-decisions.html",

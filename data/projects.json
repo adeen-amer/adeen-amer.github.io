@@ -1,6 +1,16 @@
 {
   "projects": [
     {
+      "id": "chordlift",
+      "title": "ChordLift",
+      "tagline": "End-to-end product — scoped, built with AI, shipped to production.",
+      "featured": true,
+      "categories": ["product", "creative", "data"],
+      "thumb": "assets/img/chordlift/hero.png",
+      "href": "projects/chordlift.html",
+      "imageAlt": "ChordLift guitar practice app with synced chord chart and interactive fretboard"
+    },
+    {
       "id": "dawai-lo",
       "title": "Dawai Lo",
       "tagline": "Healthcare mobile experience — research through UI craft.",

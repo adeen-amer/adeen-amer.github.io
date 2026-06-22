@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ChordLift — Case study | Adeen Amer</title>
+  <meta name="description"
+    content="Case study: ChordLift — a PM-built, AI-augmented guitar practice app from problem framing through production deployment by Adeen Amer.">
+  <link rel="icon" href="../assets/img/favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="canonical" href="https://adeen-amer.github.io/projects/chordlift.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <meta property="og:title" content="ChordLift — Case study | Adeen Amer">
+  <meta property="og:description"
+    content="End-to-end product — scoped, built with AI, shipped to production. AI chord detection and synced guitar practice.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://adeen-amer.github.io/projects/chordlift.html">
+  <meta property="og:image" content="https://adeen-amer.github.io/assets/img/chordlift/hero.png">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a class="logo" href="../index.html">Adeen Amer</a>
+      <nav class="nav-desktop" aria-label="Primary">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../skills.html">Skills &amp; tools</a>
+        <a href="../projects.html" aria-current="page">Projects</a>
+        <a href="../experience.html">Experience</a>
+        <a href="../insights.html">Insights</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="header-cta btn btn--primary btn--sm" href="../experience.html#cv">Résumé</a>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light or dark mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 3v1M12 20v1M4.22 4.22l.7.7M18.36 18.36l.7.7M1 12h1M22 12h1M4.22 19.78l.7-.7M18.36 5.64l.7-.7" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </button>
+        <button type="button" class="nav-toggle" data-nav-open aria-expanded="false" aria-controls="mobile-drawer"
+          aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer" data-mobile-drawer aria-hidden="true">
+    <div class="mobile-drawer__backdrop" data-nav-close tabindex="-1"></div>
+    <div class="mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <nav class="mobile-nav" aria-label="Mobile primary">
+        <a href="../index.html" data-nav-close>Home</a>
+        <a href="../about.html" data-nav-close>About</a>
+        <a href="../skills.html" data-nav-close>Skills &amp; tools</a>
+        <a href="../projects.html" data-nav-close aria-current="page">Projects</a>
+        <a href="../experience.html" data-nav-close>Experience</a>
+        <a href="../insights.html" data-nav-close>Insights</a>
+        <a href="../experience.html#cv" data-nav-close>Résumé</a>
+        <a href="../contact.html" data-nav-close>Contact</a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li aria-current="page">ChordLift</li>
+      </ol>
+    </nav>
+
+    <header class="page-hero reveal">
+      <p class="eyebrow">Case study · Product, creative &amp; data</p>
+      <h1>ChordLift</h1>
+      <p class="lede">I scoped, built, and shipped a full-stack AI guitar practice app — not a slide deck. ChordLift is
+        proof that I am a product manager who uses AI to deliver end-to-end products: problem framing, MVP trade-offs,
+        ML integration, and a live URL at chordlift.pages.dev.</p>
+      <p>
+        <a class="btn btn--primary" href="https://chordlift.pages.dev" rel="noopener noreferrer">Try live demo</a>
+        <a class="btn btn--ghost" href="https://github.com/adeen-amer/ChordLift" rel="noopener noreferrer">View
+          source</a>
+      </p>
+    </header>
+
+    <figure class="figure-block reveal">
+      <img src="../assets/img/chordlift/hero.png" width="1200" height="750"
+        alt="ChordLift app: upload panel, synced chord chart, and interactive fretboard during playback." loading="eager">
+      <figcaption>Primary flow: upload a track, wait for ML analysis, then play along with time-synced chords and an
+        interactive fretboard.</figcaption>
+    </figure>
+
+    <dl class="case-meta reveal">
+      <div>
+        <dt>Problem</dt>
+        <dd>Guitarists learning from recordings waste time pausing, rewinding, and guessing chords from unreliable tabs.
+        </dd>
+      </div>
+      <div>
+        <dt>My role</dt>
+        <dd>Product manager and sole builder — problem framing, MVP scope, UX, React frontend, FastAPI backend, ML
+          integration, CI, and deployment. Used AI coding assistants to accelerate implementation while I owned product
+          decisions and architecture.</dd>
+      </div>
+      <div>
+        <dt>Toolkit</dt>
+        <dd>React, TypeScript, FastAPI, Python, lv-chordia, Docker, GitHub Actions, Cloudflare Pages, Cursor.</dd>
+      </div>
+    </dl>
+
+    <article class="prose reveal">
+      <h2>Problem statement</h2>
+      <p>Learning guitar from recordings means constant pause-and-rewind loops and chord charts that rarely match the
+        recording you are actually hearing. I saw a product opportunity — turn passive listening into active practice
+        with time-synced chords and neck visualization — and decided to build it myself instead of stopping at a spec.
+      </p>
+
+      <h2>Situation &amp; task</h2>
+      <p><strong>Situation:</strong> I play guitar and felt the friction firsthand: tabs are static, YouTube tutorials
+        are slow, and existing tools either stop at chord names or ignore timing entirely.
+        <strong>Task:</strong> Define an MVP that delivers real practice value (upload → analyze → play along), ship it
+        to a public URL, and keep enough product discipline to measure ML quality over time — not just ship and hope.</p>
+
+      <h2>Building with AI as a PM</h2>
+      <p>This was not “vibe-coding a toy.” I treated AI assistants (Cursor and similar tools) as a force multiplier
+        while keeping product ownership on my side of the keyboard.</p>
+      <ul>
+        <li><strong>Scoped vertically first.</strong> One user journey — upload audio, run analysis, play along with
+          synced chords — before adding YouTube, Spotify, or solo fretboard complexity.</li>
+        <li><strong>AI for speed, PM judgment for direction.</strong> Assistants helped with boilerplate, integration
+          glue, and iteration velocity across React, FastAPI, and Docker. I drove architecture, trade-offs, and what
+          actually shipped.</li>
+        <li><strong>Examples of PM calls AI did not make:</strong> upload-only production on Cloudflare Pages
+          (<code>VITE_UPLOAD_ONLY</code>) for reliability and legal simplicity; a gold-eval regression pipeline
+          separate from fast unit CI; solo fretboard behind a feature flag until the UX was ready; cached slow analysis
+          vs real-time playback sync; user chord corrections in localStorage instead of chasing perfect ML on v1.</li>
+        <li><strong>Outcome:</strong> a deployed product at <a href="https://chordlift.pages.dev"
+            rel="noopener noreferrer">chordlift.pages.dev</a>, not a Figma mock.</li>
+      </ul>
+
+      <h2>Product decisions &amp; trade-offs</h2>
+      <ul>
+        <li><strong>Upload-only prod vs multi-source dev.</strong> Production accepts file uploads only — reliable and
+          legally simple on Cloudflare Pages. Dev builds retain YouTube, Spotify, and SoundCloud ingestion for faster
+          iteration.</li>
+        <li><strong>Cached analysis vs real-time sync.</strong> ML chord detection is slow; playback highlighting must
+          be instant. I separated the heavy analysis step from a lightweight sync engine that runs at 60fps during
+          playback.</li>
+        <li><strong>User corrections over perfect ML.</strong> Rather than block launch on chord accuracy, I added a
+          correction loop so players can fix mis-detections locally and keep practicing.</li>
+        <li><strong>Feature flags for unfinished surfaces.</strong> Scale-practice mode and solo fretboard shipped when
+          ready, not when the codebase happened to compile.</li>
+      </ul>
+
+      <h2>Technical highlights</h2>
+      <ul>
+        <li><strong>Sync engine.</strong> A <code>requestAnimationFrame</code> loop reads <code>audio.currentTime</code>
+          and updates DOM/SVG nodes directly — bypassing React state so chord and note highlighting stays smooth at
+          60fps.</li>
+        <li><strong>ML pipeline.</strong> lv-chordia on an HPSS chord stem with pitch-reliability gating; basic-pitch
+          for solo note detection; rhythm hints estimated from onset density.</li>
+        <li><strong>Scale practice.</strong> Standalone mode with pentatonic CAGED shapes, seven diatonic modes, and an
+          interactive SVG fretboard — no upload required.</li>
+        <li><strong>Infra &amp; quality.</strong> Docker Compose with Caddy, GitHub Actions CI, and a nightly gold-eval
+          pipeline to catch ML regressions before users do.</li>
+      </ul>
+
+      <h2>Challenges &amp; how I handled them</h2>
+      <ul>
+        <li><strong>YouTube fragility.</strong> Download blockers and ToS risk pushed me toward upload-first production
+          while keeping multi-source ingestion in dev for my own testing.</li>
+        <li><strong>React vs playback performance.</strong> Early prototypes stuttered during sync. Moving highlight
+          updates out of React state into direct DOM manipulation fixed it without rewriting the UI layer.</li>
+        <li><strong>ML trust.</strong> Chord detection will never be perfect on v1. Shipping corrections and a gold-eval
+          harness let me improve the model without blocking the core practice loop.</li>
+        <li><strong>Solo builder bandwidth.</strong> AI assistants compressed full-stack delivery, but I still had to
+          prioritize ruthlessly — one journey, one prod mode, one quality gate at a time.</li>
+      </ul>
+
+      <h2>Results &amp; links</h2>
+      <ul>
+        <li><strong>Live product:</strong> <a href="https://chordlift.pages.dev"
+            rel="noopener noreferrer">chordlift.pages.dev</a> — upload an MP3/WAV and play along with synced chords.
+        </li>
+        <li><strong>Open source:</strong> <a href="https://github.com/adeen-amer/ChordLift"
+            rel="noopener noreferrer">github.com/adeen-amer/ChordLift</a> — full stack, CI, and gold-eval pipeline.
+        </li>
+        <li><strong>0→1 ownership:</strong> idea → working app → deployed production URL, built largely solo with AI
+          as accelerator and PM discipline as the guardrail.</li>
+      </ul>
+
+      <p>
+        <a class="btn btn--primary" href="https://chordlift.pages.dev" rel="noopener noreferrer">Try live demo</a>
+        <a class="btn btn--ghost" href="https://github.com/adeen-amer/ChordLift" rel="noopener noreferrer">View
+          source</a>
+        <a class="btn btn--ghost" href="../projects.html">← All projects</a>
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner">
+      <div>
+        <strong>Adeen Amer</strong>
+        <p class="lede" style="margin-top: var(--space-3);">Product manager · Lahore, Pakistan</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="../about.html">About</a>
+        <a href="../skills.html">Skills &amp; tools</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../experience.html">Experience</a>
+        <a href="../insights.html">Insights</a>
+        <a href="../contact.html">Contact</a>
+        <a href="../privacy.html">Privacy</a>
+      </nav>
+      <div>
+        <p class="eyebrow" style="margin-bottom: var(--space-3);">Connect</p>
+        <div class="social-row" aria-label="Social profiles">
+          <a href="https://linkedin.com/in/adeen-amer" rel="noopener noreferrer" aria-label="LinkedIn"><svg
+              viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6v9h-4v-8c0-1.9 0-3.4-2.1-3.4-2.1 0-2.4 1.6-2.4 3.2V23h-4V8z" />
+            </svg></a>
+          <a href="https://github.com/adeen-amer" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24"
+              fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 007.9 10.9c.6.1.8-.25.8-.55v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.75.1-.73.1-.73 1.2.08 1.85 1.25 1.85 1.25 1.1 1.85 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.55-.3-5.2-1.28-5.2-5.7 0-1.25.45-2.28 1.2-3.08-.12-.3-.52-1.52.1-3.18 0 0 1-.32 3.3 1.18a11.4 11.4 0 016.2 0c2.28-1.5 3.28-1.18 3.28-1.18.62 1.66.22 2.88.1 3.18.75.8 1.2 1.83 1.2 3.08 0 5.45-3.15 6.38-6.15 6.68.5.4.9 1.2.9 2.38v3.52c0 .3.2.66.8.55A11.5 11.5 0 0023.5 12C23.5 5.65 18.35.5 12 .5z" />
+            </svg></a>
+          <a href="https://www.instagram.com/adeenamer_/" rel="noopener noreferrer" aria-label="Instagram"><svg
+              viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 2a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H7zm5 3.5A5.5 5.5 0 1112 18a5.5 5.5 0 010-11zm0 2a3.5 3.5 0 100 7 3.5 3.5 0 000-7zM18 6.5a1 1 0 110 2 1 1 0 010-2z" />
+            </svg></a>
+        </div>
+      </div>
+      <p class="copyright">© <span id="y"></span> Adeen Amer. <a href="../privacy.html">Privacy</a></p>
+    </div>
+  </footer>
+  <script>document.getElementById("y").textContent = new Date().getFullYear();</script>
+  <script src="../assets/js/site.js" defer></script>
+</body>
+
+</html>

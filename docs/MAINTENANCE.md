@@ -50,7 +50,17 @@ Drop PNG or SVG files under `assets/img/certs/` and add an `<img>` list to `skil
 
 ### Analytics
 
-Add your snippet before `</body>` on pages you care about, then disclose the vendor in `privacy.html` under “Optional analytics”.
+A cookieless, GDPR-friendly analytics loader is built into `assets/js/site.js` (function `initAnalytics`). It is **off by default** and loads on every page once enabled — no per-page snippet needed.
+
+To turn it on:
+
+1. Register a free site at [goatcounter.com](https://www.goatcounter.com/) (e.g. `adeenamer.goatcounter.com`).
+2. In `assets/js/site.js`, set `GOATCOUNTER_CODE = "adeenamer";` (your subdomain).
+3. Disclose the vendor in `privacy.html` under “Optional analytics”.
+
+It honours Do Not Track and sets no cookies, so no consent banner is required. To disable, set `GOATCOUNTER_CODE = "";` again.
+
+For a different vendor, add the snippet before `</body>` on the pages you care about instead.
 
 ### FormSubmit
 

@@ -4,6 +4,23 @@
   var THEME_KEY = "adeen-theme";
   var doc = document.documentElement;
 
+  // Privacy-friendly analytics (cookieless, GDPR-friendly — no consent banner needed).
+  // Disabled until you paste your GoatCounter code below. Register a free site at
+  // https://www.goatcounter.com/ then set GOATCOUNTER_CODE to your subdomain (e.g. "adeenamer").
+  // Leave empty ("") to keep analytics off. Documented in docs/MAINTENANCE.md.
+  var GOATCOUNTER_CODE = "";
+
+  function initAnalytics() {
+    if (!GOATCOUNTER_CODE) return;
+    // Respect Do Not Track.
+    if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://gc.zgo.at/count.js";
+    s.setAttribute("data-goatcounter", "https://" + GOATCOUNTER_CODE + ".goatcounter.com/count");
+    document.head.appendChild(s);
+  }
+
   function getStoredTheme() {
     try {
       return localStorage.getItem(THEME_KEY);
@@ -231,16 +248,22 @@
       .join("");
 
     var href = escapeAttr(basePath + (p.href || "#"));
-    var thumb = escapeAttr(basePath + (p.thumb || ""));
+    var rawThumb = basePath + (p.thumb || "");
+    var thumb = escapeAttr(rawThumb);
+    // Prefer a WebP sibling (same name, .webp) when one has been generated.
+    var webp = escapeAttr(rawThumb.replace(/\.(png|jpe?g)$/i, ".webp"));
+    var hasWebp = webp !== thumb;
 
     article.innerHTML =
       '<a href="' +
       href +
-      '" class="card__media"><img src="' +
+      '" class="card__media"><picture>' +
+      (hasWebp ? '<source srcset="' + webp + '" type="image/webp">' : "") +
+      '<img src="' +
       thumb +
       '" alt="' +
       escapeAttr(p.imageAlt || p.title || "Project") +
-      '" loading="lazy" width="640" height="400"></a><div class="card__body"><div class="tag-row">' +
+      '" loading="lazy" decoding="async" width="640" height="400"></picture></a><div class="card__body"><div class="tag-row">' +
       tags +
       '</div><h3><a class="card__link" href="' +
       href +
@@ -431,4 +454,5 @@
   initScrollReveal();
   initContactForm();
   initExternalLinks();
+  initAnalytics();
 })();

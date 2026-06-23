@@ -80,8 +80,12 @@
     <div class="two-col">
       <figure class="reveal"
         style="margin: 0; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border);">
-        <img src="assets/img/hero-bg.jpg" width="900" height="600"
-          alt="Warm stone-toned abstract texture used as a calm visual anchor beside the bio." loading="lazy">
+        <picture>
+          <source srcset="assets/img/hero-bg.webp" type="image/webp">
+          <img src="assets/img/hero-bg.jpg" width="900" height="600"
+            alt="Warm stone-toned abstract texture used as a calm visual anchor beside the bio." loading="lazy"
+            decoding="async">
+        </picture>
       </figure>
       <article class="prose reveal">
         <h2>Background</h2>

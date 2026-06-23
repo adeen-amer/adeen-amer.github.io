@@ -397,6 +397,32 @@
     });
   }
 
+  function initExternalLinks() {
+    document.querySelectorAll("a[href]").forEach(function (anchor) {
+      var href = anchor.getAttribute("href");
+      if (!href || href.charAt(0) === "#" || href.indexOf("mailto:") === 0 || href.indexOf("tel:") === 0) {
+        return;
+      }
+
+      var url;
+      try {
+        url = new URL(href, window.location.href);
+      } catch (e) {
+        return;
+      }
+
+      if (url.protocol !== "http:" && url.protocol !== "https:") return;
+      if (url.hostname === window.location.hostname) return;
+
+      anchor.setAttribute("target", "_blank");
+
+      var rel = (anchor.getAttribute("rel") || "").split(/\s+/).filter(Boolean);
+      if (rel.indexOf("noopener") === -1) rel.push("noopener");
+      if (rel.indexOf("noreferrer") === -1) rel.push("noreferrer");
+      anchor.setAttribute("rel", rel.join(" "));
+    });
+  }
+
   initTheme();
   initMobileNav();
   initProjectFilters();
@@ -404,4 +430,5 @@
   initFeaturedProjects();
   initScrollReveal();
   initContactForm();
+  initExternalLinks();
 })();

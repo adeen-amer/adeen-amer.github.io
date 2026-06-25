@@ -85,7 +85,7 @@
     <header class="page-hero reveal">
       <p class="eyebrow">Case study · Product, creative &amp; data</p>
       <h1>ChordLift</h1>
-      <p class="lede">I scoped, built, and shipped a full-stack AI guitar practice app — not a slide deck. ChordLift is
+      <p class="lede">I scoped, built, and shipped a full-stack AI guitar practice app, not a slide deck. ChordLift is
         proof that I am a product manager who uses AI to deliver end-to-end products: problem framing, MVP trade-offs,
         ML integration, and a live URL at chordlift.pages.dev.</p>
       <p>
@@ -108,7 +108,7 @@
       </div>
       <div>
         <dt>My role</dt>
-        <dd>Product manager and sole builder — problem framing, MVP scope, UX, React frontend, FastAPI backend, ML
+        <dd>Product manager and sole builder: problem framing, MVP scope, UX, React frontend, FastAPI backend, ML
           integration, CI, and deployment. Used AI coding assistants to accelerate implementation while I owned product
           decisions and architecture.</dd>
       </div>
@@ -121,22 +121,22 @@
     <article class="prose reveal">
       <h2>Problem statement</h2>
       <p>Learning guitar from recordings means constant pause-and-rewind loops and chord charts that rarely match the
-        recording you are actually hearing. I saw a product opportunity — turn passive listening into active practice
-        with time-synced chords and neck visualization — and decided to build it myself instead of stopping at a spec.
+        recording you are actually hearing. I saw a product opportunity: turn passive listening into active practice
+        with time-synced chords and neck visualization, then decided to build it myself instead of stopping at a spec.
       </p>
 
       <h2>Situation &amp; task</h2>
       <p><strong>Situation:</strong> I play guitar and felt the friction firsthand: tabs are static, YouTube tutorials
         are slow, and existing tools either stop at chord names or ignore timing entirely.
         <strong>Task:</strong> Define an MVP that delivers real practice value (upload → analyze → play along), ship it
-        to a public URL, and keep enough product discipline to measure ML quality over time — not just ship and hope.</p>
+        to a public URL, and keep enough product discipline to measure ML quality over time, not just ship and hope.</p>
 
       <h2>Building with AI as a PM</h2>
       <p>This was not “vibe-coding a toy.” I treated AI assistants (Cursor and similar tools) as a force multiplier
         while keeping product ownership on my side of the keyboard.</p>
       <ul>
-        <li><strong>Scoped vertically first.</strong> One user journey — upload audio, run analysis, play along with
-          synced chords — before adding YouTube, Spotify, or solo fretboard complexity.</li>
+        <li><strong>Scoped vertically first.</strong> One user journey (upload audio, run analysis, play along with
+          synced chords) before adding YouTube, Spotify, or solo fretboard complexity.</li>
         <li><strong>AI for speed, PM judgment for direction.</strong> Assistants helped with boilerplate, integration
           glue, and iteration velocity across React, FastAPI, and Docker. I drove architecture, trade-offs, and what
           actually shipped.</li>
@@ -150,7 +150,7 @@
 
       <h2>Product decisions &amp; trade-offs</h2>
       <ul>
-        <li><strong>Upload-only prod vs multi-source dev.</strong> Production accepts file uploads only — reliable and
+        <li><strong>Upload-only prod vs multi-source dev.</strong> Production accepts file uploads only, which is reliable and
           legally simple on Cloudflare Pages. Dev builds retain YouTube, Spotify, and SoundCloud ingestion for faster
           iteration.</li>
         <li><strong>Cached analysis vs real-time sync.</strong> ML chord detection is slow; playback highlighting must
@@ -165,12 +165,12 @@
       <h2>Technical highlights</h2>
       <ul>
         <li><strong>Sync engine.</strong> A <code>requestAnimationFrame</code> loop reads <code>audio.currentTime</code>
-          and updates DOM/SVG nodes directly — bypassing React state so chord and note highlighting stays smooth at
+          and updates DOM/SVG nodes directly, bypassing React state so chord and note highlighting stays smooth at
           60fps.</li>
         <li><strong>ML pipeline.</strong> lv-chordia on an HPSS chord stem with pitch-reliability gating; basic-pitch
           for solo note detection; rhythm hints estimated from onset density.</li>
         <li><strong>Scale practice.</strong> Standalone mode with pentatonic CAGED shapes, seven diatonic modes, and an
-          interactive SVG fretboard — no upload required.</li>
+          interactive SVG fretboard, no upload required.</li>
         <li><strong>Infra &amp; quality.</strong> Docker Compose with Caddy, GitHub Actions CI, and a nightly gold-eval
           pipeline to catch ML regressions before users do.</li>
       </ul>
@@ -184,19 +184,19 @@
         <li><strong>ML trust.</strong> Chord detection will never be perfect on v1. Shipping corrections and a gold-eval
           harness let me improve the model without blocking the core practice loop.</li>
         <li><strong>Solo builder bandwidth.</strong> AI assistants compressed full-stack delivery, but I still had to
-          prioritize ruthlessly — one journey, one prod mode, one quality gate at a time.</li>
+          prioritize ruthlessly: one journey, one prod mode, one quality gate at a time.</li>
       </ul>
 
       <h2>Results</h2>
       <div class="outcome-row" aria-label="Outcome highlights">
         <div class="outcome">
           <strong>Live in production</strong>
-          <span><a href="https://chordlift.pages.dev" rel="noopener noreferrer">chordlift.pages.dev</a> — upload an
+          <span><a href="https://chordlift.pages.dev" rel="noopener noreferrer">chordlift.pages.dev</a>: upload an
             MP3/WAV and play along with time-synced chords.</span>
         </div>
         <div class="outcome">
           <strong>0 → 1</strong>
-          <span>Idea to a working, deployed product URL — scoped, built and shipped, not left at a spec.</span>
+          <span>Idea to a working, deployed product URL, scoped, built and shipped, not left at a spec.</span>
         </div>
         <div class="outcome">
           <strong>Solo + AI</strong>

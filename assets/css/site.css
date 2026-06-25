@@ -72,6 +72,16 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keep anchored and keyboard-focused targets clear of the sticky header
+     (WCAG 2.4.12 Focus Not Obscured). */
+  scroll-padding-top: calc(var(--header-h) + var(--space-3));
+}
+
+/* Abbreviations carry their expansion via title= (WCAG 3.1.4) without the noisy
+   default dotted underline; the help cursor signals a definition is available. */
+abbr[title] {
+  text-decoration: none;
+  cursor: help;
 }
 
 @media (prefers-reduced-motion: reduce) {

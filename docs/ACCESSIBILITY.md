@@ -74,6 +74,22 @@ Re-audit when swapping raster assets or adding new figures.
 - **Automated testing:** No axe-core CI hook; run periodic manual passes with keyboard-only navigation and a screen reader (NVDA / VoiceOver).
 - **Testimonials:** Section omitted until real, permissioned quotes exist.
 
+## AAA posture (WCAG 2.1/2.2 Level AAA)
+
+The site targets AA as a hard floor and implements every Level AAA criterion that sensibly applies to a static, prose-driven portfolio. WCAG itself notes AAA conformance is not recommended as a blanket requirement because some AAA criteria cannot be satisfied for all content — the two below are exactly that case.
+
+**AAA criteria met:**
+- **1.4.6 Contrast (Enhanced):** every text/background pair clears 7:1 in both light and dark (muted `--text-2` is 9.93:1 on paper; dark body 18.97:1).
+- **2.5.5 Target Size (Enhanced):** interactive targets are ≥44×44px (nav, footer, filter pills, buttons, social icons). Breadcrumb links rely on the criterion's inline exception.
+- **2.4.12 Focus Not Obscured (Enhanced):** `scroll-padding-top` keeps anchored/keyboard-focused elements clear of the sticky header.
+- **3.1.4 Abbreviations:** first use of abbreviations (PM, CV, LUMS, EMPG, HCI, MVP, UX, CI, ML, BSc, CS, IMF) is wrapped in `<abbr title="…">`.
+- **2.4.10 Section Headings, 1.4.8 Visual Presentation** (≤65ch measure, line-height 1.65, no justified text), **1.4.9 Images of Text** (none), **2.1.3 Keyboard (No Exception)**, **2.2.x No Timing/Interruptions**, **2.3.x Flashes / Animation from Interactions** (reduced-motion).
+
+**AAA criteria consciously NOT forced (and why):**
+- **3.1.5 Reading Level:** requires content readable at lower-secondary level (or a simplified alternative). The case-study prose is deliberately senior ("MVP trade-offs", "progressive validation", "elasticity"); lowering it would undermine the portfolio's purpose. A plain-language alternative is not provided.
+- **3.1.3 Unusual Words:** a definition mechanism for every domain term (HPSS, lv-chordia, basic-pitch) would clutter the design for marginal benefit; these appear only in deep technical sections aimed at technical readers.
+
 ## Change log
 
 - **2026-04:** Contrast tokens, form labels/live region/disabled submit, filter non-colour cues, visited link colours, touch targets, insights subpages, `404.html` parity navigation, documentation of audit.
+- **2026-06:** JS-independent content (reveal as progressive enhancement + `<noscript>` project fallbacks), 44px tap targets, `scroll-padding` for focus-not-obscured, input borders to `--border-strong` (≈4.7:1), `<abbr>` expansions, projects.html heading fix; documented AAA posture and the two non-forced criteria.

@@ -8,9 +8,9 @@
   /* Body ≥ 16px */
   --fs-base: clamp(1rem, 0.95rem + 0.3vw, 1.0625rem);
   --fs-lg: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
-  --fs-xl: clamp(1.375rem, 1.15rem + 0.9vw, 1.375rem);
-  --fs-2xl: clamp(1.75rem, 1.35rem + 1.2vw, 1.75rem);
-  --fs-3xl: clamp(2.125rem, 1.5rem + 2vw, 2.25rem);
+  --fs-xl: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+  --fs-2xl: clamp(1.625rem, 1.3rem + 1.4vw, 2.125rem);
+  --fs-3xl: clamp(2.25rem, 1.55rem + 3vw, 3.25rem);
   --leading-tight: 1.2;
   --leading-body: 1.65;
   --space-1: 0.25rem;
@@ -44,6 +44,7 @@
   --header-h: 4rem;
   --max-w: 72rem;
   --transition: 160ms ease;
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 [data-theme="dark"] {
@@ -120,6 +121,7 @@ h4 {
 
 h1 {
   font-size: var(--fs-3xl);
+  letter-spacing: -0.02em;
 }
 
 h2 {
@@ -299,18 +301,70 @@ img {
   font-size: var(--fs-sm);
 }
 
-.hero-proof {
-  margin: 0 0 var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface-1);
+/* Demoted provenance line: quiet, un-boxed, sits under the lede. */
+.hero-prev {
+  margin: var(--space-4) 0 0;
+  max-width: 42ch;
   font-size: var(--fs-sm);
-  color: var(--text-1);
+  color: var(--text-2);
 }
 
-.hero-proof strong {
+.hero-prev strong {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Live-product proof: the un-fakeable signal. A flat hairline row that inverts
+   to ink on hover, exactly like the primary button — quietly bold. */
+.hero-shipped {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
   color: var(--text-0);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.hero-shipped__text {
+  font-weight: 600;
+}
+
+.hero-shipped__tag {
+  flex: none;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  color: var(--surface-1);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hero-shipped__arrow {
+  flex: none;
+  font-weight: 700;
+}
+
+.hero-shipped:hover {
+  background: var(--ink);
+  color: var(--surface-1);
+  border-color: var(--ink);
+}
+
+.hero-shipped:hover .hero-shipped__tag {
+  background: var(--surface-1);
+  color: var(--ink);
+}
+
+.hero-shipped:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .portrait-wrap picture {
@@ -502,7 +556,15 @@ main {
 
 @media (min-width: 768px) {
   .page-hero--home {
-    grid-template-columns: 1fr 1fr;
+    /* Text-led split: the thesis gets the wider column, the portrait anchors
+       the right edge at full height — a decisive asymmetry, no dead space. */
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: stretch;
+    gap: var(--space-10);
+  }
+
+  .page-hero--home .hero-copy {
+    align-self: center;
   }
 }
 
@@ -612,6 +674,17 @@ p:has(> .btn) {
   margin-inline: auto;
 }
 
+/* On desktop the portrait stops being a small centered card and becomes a
+   full-height column that anchors the composition. */
+@media (min-width: 768px) {
+  .portrait-wrap {
+    max-width: none;
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 30rem;
+  }
+}
+
 .portrait-wrap img {
   width: 100%;
   height: 100%;
@@ -647,7 +720,7 @@ p:has(> .btn) {
 }
 
 .stat span {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--text-2);
 }
 
@@ -675,6 +748,48 @@ p:has(> .btn) {
   .card-grid--3 {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* Skeleton placeholders for JS-rendered project cards. Hidden by default so
+   no-JS users never see empty boxes; shown only while JS is fetching, then
+   replaced by real cards (or an error message). */
+.card-skeleton {
+  display: none;
+}
+
+html.js .card-skeleton {
+  display: block;
+  min-height: 18rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(100deg, var(--surface-1) 30%, var(--surface-2) 50%, var(--surface-1) 70%);
+  background-size: 220% 100%;
+  animation: card-skeleton-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes card-skeleton-sweep {
+  from { background-position: 180% 0; }
+  to { background-position: -80% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .card-skeleton {
+    animation: none;
+  }
+}
+
+/* No-JS fallback: a plain, legible list of project links. */
+.grid-fallback {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.grid-fallback a {
+  font-size: var(--fs-lg);
+  font-weight: 600;
 }
 
 .card {
@@ -1146,24 +1261,33 @@ details summary:focus-visible {
   border-radius: var(--radius-sm);
 }
 
+/* Scroll reveal is progressive enhancement: content is visible by default and
+   the hidden start-state only applies once <html class="js"> is set (inline in
+   the head, before paint). No-JS users, crawlers, and headless renderers see
+   everything immediately — the animation never gates content. */
 .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .reveal {
   opacity: 0;
   transform: translateY(12px);
 }
 
-.reveal.is-visible {
+html.js .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.6s var(--ease-out-quint), transform 0.6s var(--ease-out-quint);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  html.js .reveal {
     opacity: 1;
     transform: none;
   }
 
-  .reveal.is-visible {
+  html.js .reveal.is-visible {
     transition: none;
   }
 }

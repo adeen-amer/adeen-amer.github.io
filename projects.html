@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('js');</script>
   <title>Projects — Adeen Amer</title>
   <meta name="description"
     content="Portfolio projects: product management, data analytics and creative production case studies.">
@@ -84,7 +85,24 @@
         <button type="button" class="filter-btn" data-filter="data" aria-pressed="false">Data analytics</button>
         <button type="button" class="filter-btn" data-filter="creative" aria-pressed="false">Creative</button>
       </div>
-      <div class="card-grid card-grid--3" data-projects-json="data/projects.json"></div>
+      <div class="card-grid card-grid--3" data-projects-json="data/projects.json">
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+      </div>
+      <noscript>
+        <ul class="grid-fallback">
+          <li><a href="projects/chordlift.html">ChordLift: end-to-end product, shipped to production</a></li>
+          <li><a href="projects/dawai-lo.html">Dawai Lo: healthcare mobile experience</a></li>
+          <li><a href="projects/marketplace-experience.html">Marketplace seller experience</a></li>
+          <li><a href="projects/product-discovery.html">Discovery to delivery</a></li>
+          <li><a href="projects/data-to-decisions.html">From data to decisions</a></li>
+          <li><a href="projects/creative-production.html">Creative production</a></li>
+        </ul>
+      </noscript>
     </section>
   </main>
 

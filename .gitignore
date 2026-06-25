@@ -6,3 +6,4 @@ graphify-out/
 
 # local editor / preview tooling
 .claude/
+.impeccable/

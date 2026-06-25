@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('js');</script>
   <title>Adeen Amer — Product manager (economics, CS &amp; creative)</title>
   <meta name="description"
     content="Adeen Amer is a product manager in Lahore blending economics, computer science and creative production — marketplace experience, data and storytelling.">
@@ -105,22 +106,27 @@
 
   <main id="main">
     <section class="page-hero page-hero--home" aria-labelledby="hero-heading">
-      <div class="reveal">
+      <div class="hero-copy reveal">
         <p class="eyebrow">Lahore, Pakistan</p>
-        <p class="hero-proof"><strong>Product Manager · Noon</strong> — since June 2026. Previously Dubizzle Labs
-          (EMPG): OLX Seller Center, Zameen.com and Dubizzle Cars.</p>
         <h1 id="hero-heading">I build calm software for noisy markets.</h1>
         <p class="lede">I am a product manager with roots in economics and computer science, and a practice in creative
           production. I care about trust, measurable outcomes and teams that can sustain pace without burning out.</p>
+        <p class="hero-prev">Product Manager at <strong>Noon</strong> since June 2026 · previously Dubizzle Labs (EMPG):
+          OLX Seller Center, Zameen.com and Dubizzle Cars.</p>
         <div class="hero-actions">
           <a class="btn btn--primary" href="projects.html">View projects</a>
-          <a class="btn btn--ghost" href="about.html">About me</a>
           <a class="btn btn--ghost" href="experience.html#cv">Résumé / CV</a>
         </div>
+        <a class="hero-shipped" href="https://chordlift.pages.dev" rel="noopener noreferrer">
+          <span class="hero-shipped__tag">Shipped</span>
+          <span class="hero-shipped__text">ChordLift, an AI guitar app I scoped, built and deployed to
+            production</span>
+          <span class="hero-shipped__arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
       <div class="portrait-wrap reveal">
         <picture>
-          <source type="image/webp" srcset="assets/img/profile-img-640.webp 640w, assets/img/profile-img-480.webp 480w, assets/img/profile-img-320.webp 320w" sizes="(min-width: 900px) 320px, 70vw">
+          <source type="image/webp" srcset="assets/img/profile-img-640.webp 640w, assets/img/profile-img-480.webp 480w, assets/img/profile-img-320.webp 320w" sizes="(min-width: 768px) 46vw, 70vw">
           <img src="assets/img/profile-img.png" width="640" height="800"
             alt="Adeen Amer, product manager, smiling headshot in professional attire." loading="eager" fetchpriority="high">
         </picture>
@@ -154,7 +160,19 @@
         <h2 id="work-heading">Selected work</h2>
         <p class="lede">A few threads that show how I think — each opens a longer case study.</p>
       </div>
-      <div class="card-grid card-grid--3" data-featured-json="data/projects.json"></div>
+      <div class="card-grid card-grid--3" data-featured-json="data/projects.json">
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+        <div class="card-skeleton" aria-hidden="true"></div>
+      </div>
+      <noscript>
+        <ul class="grid-fallback">
+          <li><a href="projects/chordlift.html">ChordLift: end-to-end product, shipped to production</a></li>
+          <li><a href="projects/dawai-lo.html">Dawai Lo: healthcare mobile experience</a></li>
+          <li><a href="projects/marketplace-experience.html">Marketplace seller experience</a></li>
+          <li><a href="projects/data-to-decisions.html">From data to decisions</a></li>
+        </ul>
+      </noscript>
       <p style="margin-top: var(--space-5);" class="reveal"><a class="btn btn--ghost" href="projects.html">Browse all
           projects</a></p>
     </section>

@@ -216,6 +216,7 @@
           frag.appendChild(buildProjectCard(p, ""));
         });
 
+        mount.innerHTML = "";
         mount.appendChild(frag);
         initProjectFilters();
         initScrollReveal();
@@ -298,6 +299,7 @@
           frag.appendChild(buildProjectCard(p, ""));
         });
 
+        mount.innerHTML = "";
         mount.appendChild(frag);
         initScrollReveal();
       })

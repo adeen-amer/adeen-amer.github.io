@@ -203,6 +203,20 @@
     var url = mount.getAttribute("data-projects-json");
     if (!url) return;
 
+    loadProjects(mount, url, false, ["initProjectFilters", "initScrollReveal"], "Projects could not be loaded. Please refresh the page.");
+  }
+
+  function initFeaturedProjects() {
+    var mount = document.querySelector("[data-featured-json]");
+    if (!mount) return;
+
+    var url = mount.getAttribute("data-featured-json");
+    if (!url) return;
+
+    loadProjects(mount, url, true, ["initScrollReveal"], "Featured projects could not be loaded.");
+  }
+
+  function loadProjects(mount, url, filterByFeatured, extraInitFunctions, errorMessage) {
     fetch(url)
       .then(function (r) {
         if (!r.ok) throw new Error("Failed to load projects");
@@ -210,6 +224,12 @@
       })
       .then(function (data) {
         var projects = data.projects || [];
+        if (filterByFeatured) {
+          projects = projects.filter(function (p) {
+            return p.featured;
+          });
+        }
+
         var frag = document.createDocumentFragment();
 
         projects.forEach(function (p) {
@@ -218,12 +238,14 @@
 
         mount.innerHTML = "";
         mount.appendChild(frag);
-        initProjectFilters();
-        initScrollReveal();
+
+        extraInitFunctions.forEach(function(initFn) {
+          if (initFn === "initScrollReveal") initScrollReveal();
+          else if (initFn === "initProjectFilters") initProjectFilters();
+        });
       })
       .catch(function () {
-        mount.innerHTML =
-          '<p class="form-status form-status--error" role="alert">Projects could not be loaded. Please refresh the page.</p>';
+        mount.innerHTML = '<p class="form-status form-status--error" role="alert">' + errorMessage + '</p>';
       });
   }
 
@@ -275,38 +297,6 @@
       "</p></div>";
 
     return article;
-  }
-
-  function initFeaturedProjects() {
-    var mount = document.querySelector("[data-featured-json]");
-    if (!mount) return;
-
-    var url = mount.getAttribute("data-featured-json");
-    if (!url) return;
-
-    fetch(url)
-      .then(function (r) {
-        if (!r.ok) throw new Error("Failed to load projects");
-        return r.json();
-      })
-      .then(function (data) {
-        var projects = (data.projects || []).filter(function (p) {
-          return p.featured;
-        });
-        var frag = document.createDocumentFragment();
-
-        projects.forEach(function (p) {
-          frag.appendChild(buildProjectCard(p, ""));
-        });
-
-        mount.innerHTML = "";
-        mount.appendChild(frag);
-        initScrollReveal();
-      })
-      .catch(function () {
-        mount.innerHTML =
-          '<p class="form-status form-status--error" role="alert">Featured projects could not be loaded.</p>';
-      });
   }
 
   function initInsightsSearch() {

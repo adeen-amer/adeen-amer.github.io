@@ -1549,3 +1549,52 @@ details[open] > .timeline__summary::after {
 .page-404 h1 {
   font-size: var(--fs-3xl);
 }
+
+.insight-search {
+  margin: 0 0 var(--space-5);
+}
+
+.insight-search input[type="search"] {
+  width: 100%;
+  max-width: 24rem;
+  padding: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  color: var(--text-0);
+}
+
+.insight-search input[type="search"]:focus-visible {
+  outline: none;
+  border-color: var(--ink);
+  border-width: 2px;
+  padding: calc(var(--space-3) - 1px);
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-0);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.copy-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--ink);
+}
+
+.copy-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}

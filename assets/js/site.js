@@ -362,6 +362,37 @@
       input.removeAttribute("aria-describedby");
     }
 
+    function validateField(input) {
+      switch (input.id) {
+        case "contact-name":
+          return input.value.trim().length > 0;
+        case "contact-email":
+          var em = input.value.trim();
+          return em.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+        case "contact-subject":
+          return input.value.trim().length > 0;
+        case "contact-message":
+          return input.value.trim().length > 0;
+        default:
+          return false;
+      }
+    }
+
+    function fieldErrorMessage(input) {
+      switch (input.id) {
+        case "contact-name":
+          return "Please enter your name.";
+        case "contact-email":
+          return "Please enter a valid email address.";
+        case "contact-subject":
+          return "Please add a subject.";
+        case "contact-message":
+          return "Please write a short message.";
+        default:
+          return "";
+      }
+    }
+
     function formIsValid() {
       var name = form.querySelector("#contact-name");
       var email = form.querySelector("#contact-email");

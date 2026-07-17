@@ -386,19 +386,51 @@
       input.parentNode.appendChild(err);
     }
 
+    function clearFieldError(input) {
+      var errEl = document.getElementById(input.id + "-error");
+      if (errEl) errEl.remove();
+      input.removeAttribute("aria-invalid");
+      input.removeAttribute("aria-describedby");
+    }
+
+    function validateField(input) {
+      switch (input.id) {
+        case "contact-name":
+          return input.value.trim().length > 0;
+        case "contact-email":
+          var em = input.value.trim();
+          return em.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+        case "contact-subject":
+          return input.value.trim().length > 0;
+        case "contact-message":
+          return input.value.trim().length > 0;
+        default:
+          return false;
+      }
+    }
+
+    function fieldErrorMessage(input) {
+      switch (input.id) {
+        case "contact-name":
+          return "Please enter your name.";
+        case "contact-email":
+          return "Please enter a valid email address.";
+        case "contact-subject":
+          return "Please add a subject.";
+        case "contact-message":
+          return "Please write a short message.";
+        default:
+          return "";
+      }
+    }
+
     function formIsValid() {
       var name = form.querySelector("#contact-name");
       var email = form.querySelector("#contact-email");
       var subject = form.querySelector("#contact-subject");
       var message = form.querySelector("#contact-message");
       if (!name || !email || !subject || !message) return false;
-      var em = email.value.trim();
-      return (
-        name.value.trim().length > 0 &&
-        subject.value.trim().length > 0 &&
-        message.value.trim().length > 0 &&
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)
-      );
+      return validateField(name) && validateField(email) && validateField(subject) && validateField(message);
     }
 
     function syncSubmitDisabled() {
@@ -409,6 +441,27 @@
     }
 
     form.querySelectorAll("input, textarea").forEach(function (el) {
+      el.addEventListener("input", syncSubmitDisabled);
+      el.addEventListener("blur", function () {
+        var name = form.querySelector("#contact-name");
+        var email = form.querySelector("#contact-email");
+        var subject = form.querySelector("#contact-subject");
+        var message = form.querySelector("#contact-message");
+
+        if (el.id === "contact-name" && name) {
+          clearFieldError(name);
+          if (!validateField(name)) addFieldError(name, fieldErrorMessage(name));
+        } else if (el.id === "contact-email" && email) {
+          clearFieldError(email);
+          if (!validateField(email)) addFieldError(email, fieldErrorMessage(email));
+        } else if (el.id === "contact-subject" && subject) {
+          clearFieldError(subject);
+          if (!validateField(subject)) addFieldError(subject, fieldErrorMessage(subject));
+        } else if (el.id === "contact-message" && message) {
+          clearFieldError(message);
+          if (!validateField(message)) addFieldError(message, fieldErrorMessage(message));
+        }
+      });
       el.addEventListener("input", syncSubmitDisabled);
       el.addEventListener("blur", syncSubmitDisabled);
     });
@@ -422,23 +475,22 @@
       var subject = form.querySelector("#contact-subject");
       var message = form.querySelector("#contact-message");
 
-      if (name && !name.value.trim()) {
-        addFieldError(name, "Please enter your name.");
+      if (name && !validateField(name)) {
+        addFieldError(name, fieldErrorMessage(name));
         valid = false;
       }
       if (email) {
-        var em = email.value.trim();
-        if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
-          addFieldError(email, "Please enter a valid email address.");
+        if (!validateField(email)) {
+          addFieldError(email, fieldErrorMessage(email));
           valid = false;
         }
       }
-      if (subject && !subject.value.trim()) {
-        addFieldError(subject, "Please add a subject.");
+      if (subject && !validateField(subject)) {
+        addFieldError(subject, fieldErrorMessage(subject));
         valid = false;
       }
-      if (message && !message.value.trim()) {
-        addFieldError(message, "Please write a short message.");
+      if (message && !validateField(message)) {
+        addFieldError(message, fieldErrorMessage(message));
         valid = false;
       }
 

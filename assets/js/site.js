@@ -355,6 +355,13 @@
       input.parentNode.appendChild(err);
     }
 
+    function clearFieldError(input) {
+      var errEl = document.getElementById(input.id + "-error");
+      if (errEl) errEl.remove();
+      input.removeAttribute("aria-invalid");
+      input.removeAttribute("aria-describedby");
+    }
+
     function formIsValid() {
       var name = form.querySelector("#contact-name");
       var email = form.querySelector("#contact-email");
@@ -378,6 +385,36 @@
     }
 
     form.querySelectorAll("input, textarea").forEach(function (el) {
+      el.addEventListener("input", syncSubmitDisabled);
+      el.addEventListener("blur", function () {
+        var name = form.querySelector("#contact-name");
+        var email = form.querySelector("#contact-email");
+        var subject = form.querySelector("#contact-subject");
+        var message = form.querySelector("#contact-message");
+
+        if (el.id === "contact-name" && name) {
+          clearFieldError(name);
+          if (!name.value.trim()) {
+            addFieldError(name, "Please enter your name.");
+          }
+        } else if (el.id === "contact-email" && email) {
+          clearFieldError(email);
+          var em = email.value.trim();
+          if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+            addFieldError(email, "Please enter a valid email address.");
+          }
+        } else if (el.id === "contact-subject" && subject) {
+          clearFieldError(subject);
+          if (!subject.value.trim()) {
+            addFieldError(subject, "Please add a subject.");
+          }
+        } else if (el.id === "contact-message" && message) {
+          clearFieldError(message);
+          if (!message.value.trim()) {
+            addFieldError(message, "Please write a short message.");
+          }
+        }
+      });
       el.addEventListener("input", syncSubmitDisabled);
       el.addEventListener("blur", syncSubmitDisabled);
     });

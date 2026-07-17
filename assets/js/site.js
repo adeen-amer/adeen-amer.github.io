@@ -309,6 +309,37 @@
       });
   }
 
+  function initInsightsSearch() {
+    var mount = document.querySelector("#insight-search-input");
+    if (!mount) return;
+
+    var cards = document.querySelectorAll(".insight-stack article");
+
+    function filterCards(searchText) {
+      searchText = searchText || "";
+      searchText = searchText.toLowerCase();
+      cards.forEach(function (card) {
+        var title = card.querySelector(".insight-card__title");
+        var excerpt = card.querySelector(".insight-card__excerpt");
+
+        var titleText = title ? title.textContent.toLowerCase() : "";
+        var excerptText = excerpt ? excerpt.textContent.toLowerCase() : "";
+
+        if (searchText === "" || titleText.indexOf(searchText) !== -1 || excerptText.indexOf(searchText) !== -1) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    mount.addEventListener("input", function () {
+      filterCards(mount.value);
+    });
+
+    filterCards("");
+  }
+
   function initContactForm() {
     var form = document.querySelector("[data-contact-form]");
     if (!form) return;
@@ -453,6 +484,7 @@
   initProjectFilters();
   initProjectsFromJson();
   initFeaturedProjects();
+  initInsightsSearch();
   initScrollReveal();
   initContactForm();
   initExternalLinks();

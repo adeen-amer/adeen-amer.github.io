@@ -521,6 +521,28 @@
     });
   }
 
+  function initCopyButtons() {
+    var buttons = document.querySelectorAll("[data-copy-text]");
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var text = btn.getAttribute("data-copy-text");
+        if (!navigator.clipboard) return;
+        var originalText = btn.textContent;
+        navigator.clipboard
+          .writeText(text)
+          .then(function () {
+            btn.textContent = "Copied!";
+            setTimeout(function () {
+              btn.textContent = originalText;
+            }, 1500);
+          })
+          .catch(function () {
+            /* clipboard write denied or unsupported - fail silently */
+          });
+      });
+    });
+  }
+
   initTheme();
   initMobileNav();
   initProjectFilters();
@@ -530,5 +552,6 @@
   initScrollReveal();
   initContactForm();
   initExternalLinks();
+  initCopyButtons();
   initAnalytics();
 })();

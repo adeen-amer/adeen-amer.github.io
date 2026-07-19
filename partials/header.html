@@ -1,0 +1,46 @@
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a class="logo" href="__PREFIX__index.html"__LOGO_CURRENT__>Adeen Amer</a>
+      <nav class="nav-desktop" aria-label="Primary">
+        <a href="__PREFIX__index.html"__CUR_HOME__>Home</a>
+        <a href="__PREFIX__about.html"__CUR_ABOUT__>About</a>
+        <a href="__PREFIX__skills.html"__CUR_SKILLS__>Skills &amp; tools</a>
+        <a href="__PREFIX__projects.html"__CUR_PROJECTS__>Projects</a>
+        <a href="__PREFIX__experience.html"__CUR_EXPERIENCE__>Experience</a>
+        <a href="__PREFIX__insights.html"__CUR_INSIGHTS__>Insights</a>
+        <a href="__PREFIX__contact.html"__CUR_CONTACT__>Contact</a>
+      </nav>
+      <div class="header-actions">
+        <a class="header-cta btn btn--primary btn--sm" href="__PREFIX__experience.html#cv">Résumé</a>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle light or dark mode">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 3v1M12 20v1M4.22 4.22l.7.7M18.36 18.36l.7.7M1 12h1M22 12h1M4.22 19.78l.7-.7M18.36 5.64l.7-.7" />
+            <circle cx="12" cy="12" r="4" />
+          </svg>
+        </button>
+        <button type="button" class="nav-toggle" data-nav-open aria-expanded="false" aria-controls="mobile-drawer"
+          aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-drawer" id="mobile-drawer" data-mobile-drawer aria-hidden="true">
+    <div class="mobile-drawer__backdrop" data-nav-close tabindex="-1"></div>
+    <div class="mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <nav class="mobile-nav" aria-label="Mobile primary">
+        <a href="__PREFIX__index.html" data-nav-close__CUR_HOME__>Home</a>
+        <a href="__PREFIX__about.html" data-nav-close__CUR_ABOUT__>About</a>
+        <a href="__PREFIX__skills.html" data-nav-close__CUR_SKILLS__>Skills &amp; tools</a>
+        <a href="__PREFIX__projects.html" data-nav-close__CUR_PROJECTS__>Projects</a>
+        <a href="__PREFIX__experience.html" data-nav-close__CUR_EXPERIENCE__>Experience</a>
+        <a href="__PREFIX__insights.html" data-nav-close__CUR_INSIGHTS__>Insights</a>
+        <a href="__PREFIX__experience.html#cv" data-nav-close>Résumé</a>
+        <a href="__PREFIX__contact.html" data-nav-close__CUR_CONTACT__>Contact</a>
+      </nav>
+    </div>
+  </div>

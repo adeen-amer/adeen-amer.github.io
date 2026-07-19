@@ -30,6 +30,7 @@ const required = [
   "assets/js/site.js",
   "assets/img/profile-img.webp",
   "assets/img/profile-img-640.webp",
+  "assets/fonts/inter-latin.woff2",
   "data/projects.json",
 ];
 

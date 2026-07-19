@@ -8,6 +8,21 @@ Run **`npm run build`** before a push if you want a quick check that core files 
 
 To preview locally in a browser: **`npm run preview`** then open **http://127.0.0.1:4173/** (stop with Ctrl+C).
 
+### Editing the header, mobile nav, or footer
+
+Every page's header/nav/mobile-drawer and footer are generated from two source files:
+
+- `partials/header.html` — logo, desktop nav, mobile drawer. Uses `__PREFIX__` for the root-relative path (empty at the site root, `../` one level down in `projects/` and `insights/`) and `__CUR_<KEY>__` / `__LOGO_CURRENT__` tokens that expand to `aria-current="page"` on the active page.
+- `partials/footer.html` — footer blurb, nav, social icons, copyright. Same `__PREFIX__` token.
+
+**Do not hand-edit the `<header>`/mobile-drawer/`<footer>` blocks inside the 18 individual HTML pages** — edit the partial instead, then run:
+
+```
+npm run sync-chrome
+```
+
+This regenerates the header/drawer/footer markup in every page from the partials, so a nav change (new page, renamed link, icon fix) happens in one place instead of 18. Run it, review the diff, then commit both the partial and the regenerated pages together.
+
 ### Add a project card
 
 1. Add or reuse an image under `assets/img/...`.

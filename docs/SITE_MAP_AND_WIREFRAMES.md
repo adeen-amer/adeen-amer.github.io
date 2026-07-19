@@ -55,6 +55,8 @@ flowchart TB
 
 Mobile: nav collapses to drawer (focus trap via Escape + backdrop click).
 
+Header/drawer/footer chrome is generated on every page from `partials/header.html` and `partials/footer.html` via `npm run sync-chrome` — see `docs/MAINTENANCE.md`. Edit the partial, not the individual pages.
+
 ### Home (`index.html`)
 
 ```

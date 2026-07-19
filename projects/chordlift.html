@@ -12,9 +12,7 @@
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="canonical" href="https://adeen-amer.github.io/projects/chordlift.html">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ChordLift — Case study | Adeen Amer">
@@ -27,6 +25,53 @@
   <meta property="og:url" content="https://adeen-amer.github.io/projects/chordlift.html">
   <meta property="og:image" content="https://adeen-amer.github.io/assets/img/chordlift/hero.png">
   <meta name="twitter:image" content="https://adeen-amer.github.io/assets/img/chordlift/hero.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://adeen-amer.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Projects",
+            "item": "https://adeen-amer.github.io/projects.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "ChordLift",
+            "item": "https://adeen-amer.github.io/projects/chordlift.html"
+          }
+        ]
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "ChordLift",
+        "headline": "ChordLift — Case study | Adeen Amer",
+        "description": "End-to-end product — scoped, built with AI, shipped to production. AI chord detection and synced guitar practice.",
+        "url": "https://adeen-amer.github.io/projects/chordlift.html",
+        "image": "https://adeen-amer.github.io/assets/img/chordlift/hero.png",
+        "author": {
+          "@type": "Person",
+          "name": "Adeen Amer",
+          "url": "https://adeen-amer.github.io/"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Adeen Amer"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -212,8 +257,13 @@
       <p>
         <a class="btn btn--primary" href="https://chordlift.pages.dev" rel="noopener noreferrer">Try live demo</a>
         <a class="btn btn--primary" href="../contact.html">Talk about building this</a>
-        <a class="btn btn--ghost" href="../projects.html">← All projects</a>
       </p>
+
+      <nav class="case-nav" aria-label="Case study navigation">
+        <a class="btn btn--ghost" href="creative-production.html">← Creative production</a>
+        <a class="btn btn--ghost" href="../projects.html">All projects</a>
+        <a class="btn btn--ghost" href="dawai-lo.html">Dawai Lo →</a>
+      </nav>
     </article>
   </main>
 

@@ -12,9 +12,7 @@
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="canonical" href="https://adeen-amer.github.io/projects/creative-production.html">
   <meta property="og:description" content="Case study: music, motion and live events — creative production by Adeen Amer.">
   <meta name="twitter:card" content="summary_large_image">
@@ -26,6 +24,53 @@
   <meta property="og:url" content="https://adeen-amer.github.io/projects/creative-production.html">
   <meta property="og:image" content="https://adeen-amer.github.io/assets/img/masonry-portfolio/portfolio-3.png">
   <meta name="twitter:image" content="https://adeen-amer.github.io/assets/img/masonry-portfolio/portfolio-3.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://adeen-amer.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Projects",
+            "item": "https://adeen-amer.github.io/projects.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Creative production",
+            "item": "https://adeen-amer.github.io/projects/creative-production.html"
+          }
+        ]
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Creative production",
+        "headline": "Creative production | Adeen Amer",
+        "description": "Case study: music, motion and live events — creative production by Adeen Amer.",
+        "url": "https://adeen-amer.github.io/projects/creative-production.html",
+        "image": "https://adeen-amer.github.io/assets/img/masonry-portfolio/portfolio-3.png",
+        "author": {
+          "@type": "Person",
+          "name": "Adeen Amer",
+          "url": "https://adeen-amer.github.io/"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Adeen Amer"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -52,7 +97,8 @@
         </button>
         <button type="button" class="nav-toggle" data-nav-open aria-expanded="false" aria-controls="mobile-drawer"
           aria-label="Open menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
             <path d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -157,8 +203,13 @@
         </div>
       </div>
 
-      <p><a class="btn btn--ghost" href="../projects.html">← All projects</a> <a class="btn btn--primary"
-          href="../contact.html">Book a creative collaboration</a></p>
+      <p><a class="btn btn--primary" href="../contact.html">Book a creative collaboration</a></p>
+
+      <nav class="case-nav" aria-label="Case study navigation">
+        <a class="btn btn--ghost" href="data-to-decisions.html">← From data to decisions</a>
+        <a class="btn btn--ghost" href="../projects.html">All projects</a>
+        <a class="btn btn--ghost" href="chordlift.html">ChordLift →</a>
+      </nav>
     </article>
   </main>
 

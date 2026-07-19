@@ -12,9 +12,7 @@
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
   <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="canonical" href="https://adeen-amer.github.io/projects/dawai-lo.html">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Dawai Lo — Case study | Adeen Amer">
@@ -26,6 +24,53 @@
   <meta property="og:url" content="https://adeen-amer.github.io/projects/dawai-lo.html">
   <meta property="og:image" content="https://adeen-amer.github.io/assets/img/masonry-portfolio/portfolio-1.png">
   <meta name="twitter:image" content="https://adeen-amer.github.io/assets/img/masonry-portfolio/portfolio-1.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://adeen-amer.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Projects",
+            "item": "https://adeen-amer.github.io/projects.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Dawai Lo",
+            "item": "https://adeen-amer.github.io/projects/dawai-lo.html"
+          }
+        ]
+      },
+      {
+        "@type": "CreativeWork",
+        "name": "Dawai Lo",
+        "headline": "Dawai Lo — Case study | Adeen Amer",
+        "description": "Healthcare mobile experience — research through UI craft.",
+        "url": "https://adeen-amer.github.io/projects/dawai-lo.html",
+        "image": "https://adeen-amer.github.io/assets/img/masonry-portfolio/portfolio-1.png",
+        "author": {
+          "@type": "Person",
+          "name": "Adeen Amer",
+          "url": "https://adeen-amer.github.io/"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Adeen Amer"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -164,8 +209,13 @@
         </div>
       </div>
 
-      <p><a class="btn btn--ghost" href="../projects.html">← All projects</a>
-        <a class="btn btn--primary" href="../contact.html">Discuss a similar build</a></p>
+      <p><a class="btn btn--primary" href="../contact.html">Discuss a similar build</a></p>
+
+      <nav class="case-nav" aria-label="Case study navigation">
+        <a class="btn btn--ghost" href="chordlift.html">← ChordLift</a>
+        <a class="btn btn--ghost" href="../projects.html">All projects</a>
+        <a class="btn btn--ghost" href="marketplace-experience.html">Marketplace seller experience →</a>
+      </nav>
     </article>
   </main>
 

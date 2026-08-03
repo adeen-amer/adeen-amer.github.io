@@ -1,0 +1,65 @@
+# Signalcast niche pack: online marketplace operations
+#
+# Alternate pack. Audience is closer to Adeen's own network (marketplace and
+# classifieds operators), which matters more than market size for a first
+# product — the first ten customers come from people who already take your call.
+#
+# Swap this in by setting NICHE_SLUG=marketplace-ops and re-running the seed.
+
+slug: marketplace-ops
+name: "Marketplace Operator Weekly"
+timezone: "Asia/Dubai"
+
+audience: >
+  Product and ops leaders at online marketplaces and classifieds platforms —
+  people who own supply/demand balance, trust & safety, seller tooling, or
+  monetization. They want competitor moves, platform policy shifts, and
+  regulation that changes how marketplaces operate.
+
+sources:
+  - name: "Marketplace Pulse"
+    url: "https://www.marketplacepulse.com/rss"
+    kind: rss
+    context: "Marketplace industry analysis — Amazon, eBay, Etsy, Shopify ecosystem."
+
+  - name: "European Commission — Digital strategy news"
+    url: "https://digital-strategy.ec.europa.eu/en/rss.xml"
+    kind: rss
+    context: "DSA/DMA enforcement and platform regulation in the EU."
+
+  - name: "US FTC — Press releases"
+    url: "https://www.ftc.gov/feeds/press-release.xml"
+    kind: rss
+    context: "Consumer protection enforcement against platforms and sellers."
+
+  - name: "TechCrunch — Commerce"
+    url: "https://techcrunch.com/category/commerce/feed/"
+    kind: rss
+    context: "Funding, launches, and shutdowns across commerce and marketplaces."
+
+relevance:
+  include:
+    - "A marketplace changing seller fees, ranking, or policy"
+    - "Platform regulation that forces an operational or product change"
+    - "Funding, acquisition, or shutdown of a marketplace in any vertical"
+    - "Trust & safety incidents and the response to them"
+    - "Concrete data on take rates, GMV, or supply/demand dynamics"
+  exclude:
+    - "Generic e-commerce marketing advice"
+    - "Vendor press releases with no independent substance"
+    - "Conference announcements and webinars"
+    - "Stock price movements with no operational cause"
+
+digest:
+  cron: "0 6 * * 2"
+  max_items: 12
+  min_score: 55
+  subject: "Marketplace Operator Weekly — {{date}}"
+  intro: >
+    What moved in marketplaces this week — competitor policy changes,
+    regulation, and money — with the operator implication called out.
+
+pricing:
+  monthly_usd: 39
+  currency: usd
+  trial_days: 0

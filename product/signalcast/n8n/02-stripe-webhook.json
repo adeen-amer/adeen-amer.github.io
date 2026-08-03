@@ -1,0 +1,412 @@
+{
+  "name": "Signalcast — Stripe Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "signalcast-stripe",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "stripe-webhook",
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        300
+      ],
+      "webhookId": "signalcast-stripe"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Verifies the Stripe signature before trusting anything in the body.\n//\n// Requires NODE_FUNCTION_ALLOW_BUILTIN=crypto on the n8n container (set in the\n// bundled docker-compose.yml). Without it this node throws, which is the safe\n// failure: an unverified webhook must never create a subscriber.\nconst crypto = require('crypto');\n\nconst secret = $env.STRIPE_WEBHOOK_SECRET;\nif (!secret) throw new Error('STRIPE_WEBHOOK_SECRET is not set.');\n\nconst headers = $json.headers ?? {};\nconst sigHeader = headers['stripe-signature'] ?? headers['Stripe-Signature'];\nif (!sigHeader) throw new Error('Missing stripe-signature header.');\n\n// The signed payload is the EXACT raw body bytes. The webhook node is set to\n// raw mode for this reason — re-serializing parsed JSON changes the bytes and\n// every signature check would fail.\nconst raw = Buffer.isBuffer($json.body)\n  ? $json.body.toString('utf8')\n  : typeof $json.body === 'string'\n    ? $json.body\n    : JSON.stringify($json.body);\n\nconst parts = Object.fromEntries(\n  sigHeader.split(',').map((kv) => {\n    const idx = kv.indexOf('=');\n    return [kv.slice(0, idx).trim(), kv.slice(idx + 1).trim()];\n  })\n);\n\nconst timestamp = parts.t;\nconst signature = parts.v1;\nif (!timestamp || !signature) throw new Error('Malformed stripe-signature header.');\n\n// Replay window: reject anything older than 5 minutes.\nconst ageSeconds = Math.abs(Date.now() / 1000 - Number(timestamp));\nif (!Number.isFinite(ageSeconds) || ageSeconds > 300) {\n  throw new Error('Stripe webhook timestamp outside tolerance — possible replay.');\n}\n\nconst expected = crypto\n  .createHmac('sha256', secret)\n  .update(`${timestamp}.${raw}`)\n  .digest('hex');\n\nconst a = Buffer.from(expected, 'utf8');\nconst b = Buffer.from(signature, 'utf8');\nif (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {\n  throw new Error('Stripe signature mismatch — rejecting.');\n}\n\nconst event = JSON.parse(raw);\nconst obj = event.data?.object ?? {};\n\n// Map Stripe lifecycle to our subscriber status.\nconst statusFor = {\n  'checkout.session.completed': 'active',\n  'customer.subscription.created': 'active',\n  'customer.subscription.updated': null, // derived below\n  'customer.subscription.deleted': 'canceled',\n  'invoice.payment_failed': 'past_due',\n};\n\nif (!(event.type in statusFor)) {\n  return [{ json: { ignore: true, type: event.type } }];\n}\n\nlet status = statusFor[event.type];\nif (status === null) {\n  status = ['active', 'trialing'].includes(obj.status)\n    ? 'active'\n    : obj.status === 'past_due'\n      ? 'past_due'\n      : 'canceled';\n}\n\nconst email =\n  obj.customer_details?.email ||\n  obj.customer_email ||\n  obj.metadata?.email ||\n  null;\n\nif (!email) {\n  // Subscription-lifecycle events carry a customer id but no email. Key off the\n  // customer id instead so the update still lands on the right row.\n  const customerId = typeof obj.customer === 'string' ? obj.customer : obj.customer?.id;\n  if (!customerId) return [{ json: { ignore: true, reason: 'no email or customer id' } }];\n  return [{ json: { ignore: false, byCustomer: true, customerId, status, type: event.type } }];\n}\n\nreturn [\n  {\n    json: {\n      ignore: false,\n      byCustomer: false,\n      email: String(email).toLowerCase().trim(),\n      status,\n      type: event.type,\n      customerId: typeof obj.customer === 'string' ? obj.customer : (obj.customer?.id ?? null),\n      subscriptionId: obj.subscription ?? (obj.object === 'subscription' ? obj.id : null),\n    },\n  },\n];"
+      },
+      "id": "verify-signature",
+      "name": "Verify Signature",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          -280,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "actionable",
+              "leftValue": "={{ $json.ignore }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "boolean",
+                "operation": "false"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "actionable",
+      "name": "Actionable Event?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -60,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Two shapes: a checkout with an email (insert-or-update by email), or a\n// subscription lifecycle event with only a customer id (update by customer id).\nconst d = $json;\n\nif (d.byCustomer) {\n  return [\n    {\n      json: {\n        mode: 'patch',\n        query: `stripe_customer_id=eq.${encodeURIComponent(d.customerId)}`,\n        body: { status: d.status, unsubscribed_at: d.status === 'canceled' ? new Date().toISOString() : null },\n      },\n    },\n  ];\n}\n\nreturn [\n  {\n    json: {\n      mode: 'upsert',\n      isNew: d.type === 'checkout.session.completed',\n      email: d.email,\n      body: [\n        {\n          email: d.email,\n          niche: $env.NICHE_SLUG,\n          status: d.status,\n          stripe_customer_id: d.customerId,\n          stripe_subscription_id: d.subscriptionId,\n          unsubscribed_at: null,\n        },\n      ],\n    },\n  },\n];"
+      },
+      "id": "build-upsert",
+      "name": "Build Upsert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          160,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "is-upsert",
+              "leftValue": "={{ $json.mode }}",
+              "rightValue": "upsert",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "upsert-or-patch",
+      "name": "Upsert or Patch?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        380,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/subscribers",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=representation"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "on_conflict",
+              "value": "email,niche"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}"
+      },
+      "id": "upsert-subscriber",
+      "name": "Upsert Subscriber",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          600,
+          180
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/subscribers?{{ $json.query }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}"
+      },
+      "id": "patch-subscriber",
+      "name": "Patch Subscriber",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          600,
+          420
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Only greet genuinely new subscribers. A plan change should not re-trigger it.\nconst ctx = $('Build Upsert').first().json;\nif (!ctx.isNew) return [];\n\nconst rowsRaw = $input.first()?.json;\nconst rows = Array.isArray(rowsRaw) ? rowsRaw : (rowsRaw?.data ?? []);\nconst sub = rows[0];\nif (!sub?.unsub_token) return [];\n\nconst base = ($env.PUBLIC_BASE_URL || '').replace(/\\/+$/, '');\nconst brand = $env.NICHE_NAME || 'Signalcast';\nconst unsubUrl = `${base}/unsubscribe?token=${encodeURIComponent(sub.unsub_token)}`;\n\nconst esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n\nreturn [\n  {\n    json: {\n      from: $env.SENDER_FROM,\n      to: [sub.email],\n      reply_to: $env.SENDER_REPLY_TO || $env.SENDER_FROM,\n      subject: `Welcome to ${brand}`,\n      headers: {\n        'List-Unsubscribe': `<${unsubUrl}>`,\n        'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',\n      },\n      html: `<div style=\"max-width:520px;font:400 15px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#222;\">\n<p>You're in. Your first issue of <strong>${esc(brand)}</strong> arrives with the next scheduled send.</p>\n<p>Two things worth knowing:</p>\n<ul>\n<li>Most weeks you'll get a handful of items, not a wall of them. If a week is quiet, you get a short issue — that's the point.</li>\n<li>Reply to this email if something's off, or if there's a source you think is missing. It goes to a person.</li>\n</ul>\n<p style=\"color:#8a8a8a;font-size:13px;margin-top:28px;\"><a href=\"${unsubUrl}\" style=\"color:#8a8a8a;\">Unsubscribe</a> at any time.</p>\n</div>`,\n    },\n  },\n];"
+      },
+      "id": "build-welcome",
+      "name": "Build Welcome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          820,
+          180
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}"
+      },
+      "id": "send-welcome",
+      "name": "Send Welcome",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          1040,
+          180
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "ok",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-ok",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Stripe Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify Signature",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Signature": {
+      "main": [
+        [
+          {
+            "node": "Actionable Event?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actionable Event?": {
+      "main": [
+        [
+          {
+            "node": "Build Upsert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Upsert": {
+      "main": [
+        [
+          {
+            "node": "Upsert or Patch?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert or Patch?": {
+      "main": [
+        [
+          {
+            "node": "Upsert Subscriber",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Patch Subscriber",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Subscriber": {
+      "main": [
+        [
+          {
+            "node": "Build Welcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Welcome": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Patch Subscriber": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

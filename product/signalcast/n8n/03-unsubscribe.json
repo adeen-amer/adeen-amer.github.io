@@ -1,0 +1,256 @@
+{
+  "name": "Signalcast — Unsubscribe",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "signalcast-unsubscribe",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "unsub-webhook",
+      "name": "Unsubscribe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        300
+      ],
+      "webhookId": "signalcast-unsubscribe"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "signalcast-unsubscribe",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "unsub-webhook-post",
+      "name": "One-Click POST",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -460,
+        480
+      ],
+      "webhookId": "signalcast-unsubscribe-post"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// RFC 8058 one-click sends a POST; the link in the footer is a GET. Both land\n// here. A missing token is a bad request, not a silent success.\nconst token = String($json.query?.token ?? '').trim();\nif (!/^[a-f0-9]{16,96}$/i.test(token)) {\n  return [{ json: { ok: false, reason: 'invalid token' } }];\n}\nreturn [{ json: { ok: true, token } }];"
+      },
+      "id": "read-token",
+      "name": "Read Token",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          -240,
+          380
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "token-ok",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "valid-token",
+      "name": "Valid Token?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -20,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        },
+        "method": "PATCH",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/subscribers?unsub_token=eq.{{ $json.token }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"unsubscribed\", unsubscribed_at: new Date().toISOString() }) }}"
+      },
+      "id": "mark-unsubscribed",
+      "name": "Mark Unsubscribed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          200,
+          260
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>You're unsubscribed</title><style>:root{color-scheme:light dark}body{margin:0;min-height:100vh;display:grid;place-items:center;font:400 16px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#faf9f7;color:#1a1a1a}@media(prefers-color-scheme:dark){body{background:#111;color:#eee}}main{max-width:34rem;padding:2rem;text-align:center}h1{font-size:1.35rem;margin:0 0 .75rem}p{margin:0;color:#666}@media(prefers-color-scheme:dark){p{color:#aaa}}</style></head><body><main><h1>You're unsubscribed</h1><p>You won't receive any more issues. No hard feelings — reply to any past issue if you change your mind.</p></main></body></html>",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-unsubbed",
+      "name": "Respond Unsubscribed",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        420,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>That link didn't work</title><style>:root{color-scheme:light dark}body{margin:0;min-height:100vh;display:grid;place-items:center;font:400 16px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#faf9f7;color:#1a1a1a}@media(prefers-color-scheme:dark){body{background:#111;color:#eee}}main{max-width:34rem;padding:2rem;text-align:center}h1{font-size:1.35rem;margin:0 0 .75rem}p{margin:0;color:#666}@media(prefers-color-scheme:dark){p{color:#aaa}}</style></head><body><main><h1>That link didn't work</h1><p>The unsubscribe link looks malformed or expired. Reply to any issue and it will be handled by hand.</p></main></body></html>",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-bad",
+      "name": "Respond Bad Token",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "Unsubscribe Webhook": {
+      "main": [
+        [
+          {
+            "node": "Read Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "One-Click POST": {
+      "main": [
+        [
+          {
+            "node": "Read Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Token": {
+      "main": [
+        [
+          {
+            "node": "Valid Token?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Token?": {
+      "main": [
+        [
+          {
+            "node": "Mark Unsubscribed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Bad Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Unsubscribed": {
+      "main": [
+        [
+          {
+            "node": "Respond Unsubscribed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

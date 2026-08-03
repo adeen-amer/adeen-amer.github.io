@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+# Product source lives in this repo but is not part of the portfolio site.
+# It ships to its own domain — see product/signalcast/RUNBOOK.md.
+Disallow: /product/
 
 Sitemap: https://adeen-amer.github.io/sitemap.xml

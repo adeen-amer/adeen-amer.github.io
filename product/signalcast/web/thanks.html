@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're subscribed</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light dark; --bg:#faf9f7; --ink:#16150f; --muted:#6b6b66; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#131211; --ink:#f0eee9; --muted:#9a978f; } }
+  :root[data-theme="light"] { --bg:#faf9f7; --ink:#16150f; --muted:#6b6b66; }
+  :root[data-theme="dark"]  { --bg:#131211; --ink:#f0eee9; --muted:#9a978f; }
+  body {
+    margin:0; min-height:100vh; display:grid; place-items:center;
+    background:var(--bg); color:var(--ink);
+    font:400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+  }
+  main { max-width:32rem; padding:2rem; }
+  h1 { font-size:1.6rem; font-weight:600; margin:0 0 1rem; letter-spacing:-.01em; }
+  p { color:var(--muted); margin:0 0 1rem; }
+  a { color:var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <h1>You're subscribed.</h1>
+  <p>
+    A welcome note is on its way, and your first issue arrives with the next
+    scheduled send. If nothing shows up within a few minutes, check your spam
+    folder and mark it as not spam — that helps every issue after this one.
+  </p>
+  <p>
+    Reply to any issue if something's off, or if there's a source you think is
+    missing. It goes to a person.
+  </p>
+  <p><a href="/">Back to the site</a></p>
+</main>
+</body>
+</html>

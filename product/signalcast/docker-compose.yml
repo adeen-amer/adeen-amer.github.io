@@ -1,0 +1,78 @@
+# Self-hosted n8n for Signalcast.
+#
+#   docker compose up -d
+#
+# Runs on any $5-6/mo VPS (Hetzner CX22, DigitalOcean, Fly). n8n Cloud works too
+# and skips this file entirely — but at ~$25/mo it costs more than the product
+# earns until roughly customer three, so start self-hosted.
+#
+# Put a TLS terminator in front (Caddy is two lines; Cloudflare Tunnel is free).
+# Stripe will not deliver webhooks to a plain-HTTP endpoint.
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    restart: unless-stopped
+    ports:
+      # Bound to localhost only — the reverse proxy is what faces the internet.
+      - "127.0.0.1:5678:5678"
+    environment:
+      # --- identity / URLs ------------------------------------------------
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://${N8N_HOST}/
+      - GENERIC_TIMEZONE=${NICHE_TZ:-UTC}
+      - TZ=${NICHE_TZ:-UTC}
+
+      # --- auth -----------------------------------------------------------
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      # Encrypts stored credentials. If you lose this, every saved credential
+      # in n8n becomes unreadable — back it up somewhere other than this host.
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+
+      # --- required by the workflows ---------------------------------------
+      # The Stripe signature check needs node:crypto inside a Code node.
+      # Without this the webhook workflow throws — which is the safe failure,
+      # but it means no subscriber is ever created.
+      - NODE_FUNCTION_ALLOW_BUILTIN=crypto
+      # The workflows read config from $env rather than n8n credentials, so the
+      # exported JSON is portable across instances.
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+
+      # --- housekeeping ----------------------------------------------------
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=336
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_RUNNERS_ENABLED=true
+
+      # --- application config (see .env.example) ---------------------------
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-claude-opus-5}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - PUBLIC_BASE_URL=${PUBLIC_BASE_URL}
+      - SENDER_FROM=${SENDER_FROM}
+      - SENDER_REPLY_TO=${SENDER_REPLY_TO}
+      - SENDER_POSTAL_ADDRESS=${SENDER_POSTAL_ADDRESS}
+      - NICHE_SLUG=${NICHE_SLUG}
+      - NICHE_NAME=${NICHE_NAME}
+      - NICHE_TZ=${NICHE_TZ}
+      - NICHE_AUDIENCE=${NICHE_AUDIENCE}
+      - NICHE_INCLUDE=${NICHE_INCLUDE}
+      - NICHE_EXCLUDE=${NICHE_EXCLUDE}
+      - NICHE_SUBJECT=${NICHE_SUBJECT}
+      - NICHE_INTRO=${NICHE_INTRO}
+      - MAX_ITEMS=${MAX_ITEMS:-10}
+      - MIN_SCORE=${MIN_SCORE:-55}
+      - MAX_ITEMS_SCORED=${MAX_ITEMS_SCORED:-60}
+      - LOOKBACK_DAYS=${LOOKBACK_DAYS:-14}
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:

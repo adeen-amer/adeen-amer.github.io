@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Governance Weekly — what changed, and what it means for your roadmap</title>
+<meta name="description" content="A weekly briefing for product and compliance teams shipping AI features. Regulation, enforcement, and deadlines — with the implication spelled out. Five minutes, once a week.">
+
+<!-- REMOVE THIS LINE WHEN YOU LAUNCH (runbook step 6).
+     It exists because this file lives inside the adeen-amer.github.io repo, so
+     without it a draft sales page carrying placeholder Stripe links would be
+     crawlable under the portfolio domain. Delete it once the page is deployed
+     to its own domain with a real payment link. -->
+<meta name="robots" content="noindex, nofollow">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Governance Weekly">
+<meta property="og:description" content="What changed in AI regulation this week, and what it means for your roadmap. Five minutes, once a week.">
+
+<style>
+  /* Everything is inline and self-contained: this page must work on GitHub
+     Pages, Netlify, or a bare S3 bucket with no build step and no CDN. */
+  :root {
+    color-scheme: light dark;
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --border: #e8e5e0;
+    --ink: #16150f;
+    --muted: #6b6b66;
+    --accent: #1a1a1a;
+    --accent-ink: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #131211;
+      --surface: #1b1a18;
+      --border: #2e2c29;
+      --ink: #f0eee9;
+      --muted: #9a978f;
+      --accent: #f0eee9;
+      --accent-ink: #16150f;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #faf9f7; --surface: #fff; --border: #e8e5e0;
+    --ink: #16150f; --muted: #6b6b66; --accent: #1a1a1a; --accent-ink: #fff;
+  }
+  :root[data-theme="dark"] {
+    --bg: #131211; --surface: #1b1a18; --border: #2e2c29;
+    --ink: #f0eee9; --muted: #9a978f; --accent: #f0eee9; --accent-ink: #16150f;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 42rem; margin: 0 auto; padding: 0 1.25rem; }
+  header { padding: 5rem 0 0; }
+  .eyebrow {
+    font: 600 12px/1.4 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  h1 {
+    font-size: clamp(2rem, 6vw, 2.9rem);
+    line-height: 1.12; letter-spacing: -.02em;
+    margin: .8rem 0 1.1rem; font-weight: 600;
+  }
+  .lede { font-size: 1.16rem; color: var(--muted); margin: 0 0 2.25rem; }
+
+  .cta {
+    display: flex; flex-wrap: wrap; gap: .9rem 1.25rem;
+    align-items: center; margin: 0 0 1rem;
+  }
+  .btn {
+    display: inline-block; background: var(--accent); color: var(--accent-ink);
+    text-decoration: none; padding: .85rem 1.6rem; border-radius: 2px;
+    font: 600 15px/1 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    min-height: 44px; line-height: 1.6;
+  }
+  .btn:hover { opacity: .88; }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .price {
+    font: 400 14px/1.5 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--muted);
+  }
+
+  section { padding: 3.25rem 0 0; }
+  h2 {
+    font: 600 13px/1.4 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 1.25rem;
+  }
+  p { margin: 0 0 1.15rem; }
+
+  .sample {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: 1.75rem; border-radius: 3px;
+  }
+  .sample-head {
+    font: 600 11px/1.4 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    padding-bottom: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+  }
+  .entry + .entry { margin-top: 1.75rem; padding-top: 1.75rem; border-top: 1px solid var(--border); }
+  .entry h3 { font-size: 1.05rem; font-weight: 600; margin: .35rem 0 .5rem; line-height: 1.35; }
+  .entry p { font-size: .97rem; margin: 0 0 .55rem; }
+  .src {
+    font: 600 11px/1.4 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  }
+  .why { font-size: .9rem; color: var(--muted); margin: 0; }
+  .why strong { color: var(--ink); font-weight: 600; }
+
+  ul.plain { margin: 0 0 1.15rem; padding-left: 1.15rem; }
+  ul.plain li { margin-bottom: .55rem; }
+
+  footer {
+    margin-top: 4.5rem; padding: 2rem 0 3.5rem; border-top: 1px solid var(--border);
+    font: 400 13px/1.7 ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--muted);
+  }
+  footer a { color: var(--muted); }
+  a { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">A weekly briefing</div>
+    <h1>What changed in AI regulation this week — and what it means for your roadmap.</h1>
+    <p class="lede">
+      Five sources, read every week, cut down to the handful of things that
+      actually change what a product team has to do. No conference roundups, no
+      think pieces, no padding.
+    </p>
+
+    <div class="cta">
+      <!-- Replace with your Stripe Payment Link. Payment Links need no backend:
+           Stripe hosts checkout, then fires the webhook that creates the
+           subscriber. See RUNBOOK.md step 5. -->
+      <a class="btn" href="https://buy.stripe.com/REPLACE_ME">Subscribe — $29/month</a>
+      <span class="price">Cancel any time, one click. No annual lock-in.</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>What an issue looks like</h2>
+    <div class="sample">
+      <div class="sample-head">AI Governance Weekly &middot; sample</div>
+
+      <div class="entry">
+        <div class="src">01 &middot; European Commission</div>
+        <h3>Commission fines AdTech Ltd &pound;4.2m over consent flows</h3>
+        <p>
+          The regulator fined AdTech Ltd for processing personal data without a
+          lawful basis, specifically over pre-ticked consent in its onboarding.
+          Firms running comparable flows have until 1 October to review them.
+        </p>
+        <p class="why"><strong>Why it matters:</strong> anyone running consent-based targeting in the EU now has a dated deadline and a worked example of what fails.</p>
+      </div>
+
+      <div class="entry">
+        <div class="src">02 &middot; NIST</div>
+        <h3>Draft framework opens for public comment</h3>
+        <p>
+          NIST published a draft profile for generative AI systems and opened a
+          comment period closing 15 September. The draft introduces
+          documentation expectations that go beyond the existing RMF.
+        </p>
+        <p class="why"><strong>Why it matters:</strong> enterprise buyers cite NIST profiles in security questionnaires, so this becomes a procurement question within two quarters.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Who it's for</h2>
+    <p>
+      Product managers, compliance leads, and founders at companies shipping AI
+      features — people who need to know when the rules move, but who are not
+      going to read EUR-Lex on a Monday morning.
+    </p>
+    <p>It is probably not for you if you are a practising lawyer. You will find it too shallow, and you already have better sources.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ul class="plain">
+      <li>Five official sources are checked every week — regulators and standards bodies, not blogs.</li>
+      <li>Everything new is triaged against one question: does this change what a product team must do?</li>
+      <li>What survives gets a two-sentence summary and a plain statement of who it lands on.</li>
+      <li>Most weeks that is five to ten items. Some weeks it is three. You get the short issue rather than a padded one.</li>
+    </ul>
+    <p>
+      Triage is done by a language model working to a fixed editorial rubric, and
+      summaries are drawn only from the source text. It is a filter, not a
+      substitute for legal advice.
+    </p>
+  </section>
+
+  <section>
+    <h2>Subscribe</h2>
+    <p>
+      $29 a month. Every issue has a one-click unsubscribe, and cancelling takes
+      one click in Stripe — no email, no retention flow.
+    </p>
+    <div class="cta">
+      <a class="btn" href="https://buy.stripe.com/REPLACE_ME">Subscribe — $29/month</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      AI Governance Weekly is an independent briefing. It summarises publicly
+      published material and is not legal advice.
+    </p>
+    <p>
+      <a href="/privacy">Privacy</a> &middot;
+      <a href="/terms">Terms</a> &middot;
+      <a href="mailto:you@yourdomain.com">you@yourdomain.com</a>
+    </p>
+    <p>[Your registered postal address]</p>
+  </footer>
+
+</div>
+</body>
+</html>

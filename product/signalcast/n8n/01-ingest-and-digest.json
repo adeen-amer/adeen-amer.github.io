@@ -1,0 +1,856 @@
+{
+  "name": "Signalcast — Ingest & Digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "=0 6 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "weekly-trigger",
+      "name": "Weekly Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/sources",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "*"
+            },
+            {
+              "name": "niche",
+              "value": "=eq.{{ $env.NICHE_SLUG }}"
+            },
+            {
+              "name": "active",
+              "value": "eq.true"
+            }
+          ]
+        }
+      },
+      "id": "fetch-sources",
+      "name": "Fetch Sources",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          -420,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// PostgREST returns a bare array. Depending on n8n version the HTTP node either\n// splits that into items or hands back one item wrapping it — accept both.\nconst first = $input.first()?.json;\nconst rows = Array.isArray(first)\n  ? first\n  : Array.isArray(first?.data)\n    ? first.data\n    : $input.all().map((i) => i.json);\n\nconst sources = rows.filter((r) => r && r.url);\nif (sources.length === 0) {\n  throw new Error(\n    'No active sources for niche \"' + ($env.NICHE_SLUG || '') + '\". Run db/seed.sql first.'\n  );\n}\nconsole.log(`Fetching ${sources.length} sources.`);\nreturn sources.map((json) => ({ json }));"
+      },
+      "id": "normalize-sources",
+      "name": "Normalize Sources",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          -220,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text",
+              "neverError": true
+            }
+          },
+          "timeout": 20000,
+          "redirect": {
+            "redirect": {}
+          }
+        },
+        "url": "={{ $json.url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "=Signalcast/1.0 (+{{ $env.PUBLIC_BASE_URL }})"
+            },
+            {
+              "name": "Accept",
+              "value": "application/rss+xml, application/xml, text/xml, */*"
+            }
+          ]
+        }
+      },
+      "id": "fetch-feed",
+      "name": "Fetch Feed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          -20,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Turns raw feed bodies into normalized items.\n//\n// Index alignment: \"Fetch Feed\" is an HTTP Request node, which emits exactly one\n// output item per input item (including failures, because neverError is on). So\n// output[i] corresponds to the source at input[i]. We assert the lengths match\n// before relying on that, and fall back to skipping unmatched rows.\nconst sources = $('Normalize Sources').all().map((i) => i.json);\nconst responses = $input.all();\n\nif (sources.length !== responses.length) {\n  console.warn(\n    `Source/response count mismatch (${sources.length} vs ${responses.length}); ` +\n      'unmatched feeds will be skipped.'\n  );\n}\n\n// Feeds escape HTML at least as often as they wrap it in CDATA, so the order\n// here matters and is not obvious:\n//\n//   strip tags -> decode entities -> strip AGAIN -> decode &amp; last\n//\n// The second strip catches markup that only became markup once the entities\n// were decoded (&lt;p&gt; is extremely common in Atom summaries). Decoding\n// &amp; last stops \"&amp;lt;\" from collapsing into a real \"<\".\nconst NAMED = {\n  nbsp: ' ', lt: '<', gt: '>', quot: '\"', apos: \"'\", ndash: '\\u2013',\n  mdash: '\\u2014', hellip: '\\u2026', lsquo: '\\u2018', rsquo: '\\u2019',\n  ldquo: '\\u201c', rdquo: '\\u201d', pound: '\\u00a3', euro: '\\u20ac',\n  copy: '\\u00a9', reg: '\\u00ae', trade: '\\u2122', deg: '\\u00b0',\n  bull: '\\u2022', middot: '\\u00b7', eacute: '\\u00e9', egrave: '\\u00e8',\n  agrave: '\\u00e0', uuml: '\\u00fc', ouml: '\\u00f6', auml: '\\u00e4',\n  szlig: '\\u00df', ccedil: '\\u00e7', ntilde: '\\u00f1',\n};\n\nconst decode = (s) =>\n  s\n    // Numeric: &#8212; and &#x2014;\n    .replace(/&#(\\d+);/g, (_, d) => {\n      const n = Number(d);\n      return n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : ' ';\n    })\n    .replace(/&#[xX]([0-9a-fA-F]+);/g, (_, h) => {\n      const n = parseInt(h, 16);\n      return n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : ' ';\n    })\n    // Named, except &amp; which is handled last by the caller.\n    .replace(/&([a-zA-Z]+);/g, (m, name) => {\n      const key = name.toLowerCase();\n      if (key === 'amp') return m;\n      return Object.prototype.hasOwnProperty.call(NAMED, key) ? NAMED[key] : m;\n    });\n\nconst tags = (s) => s.replace(/<[^>]*>/g, ' ');\n\nconst strip = (s) =>\n  decode(tags(decode(tags(String(s ?? '').replace(/<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>/g, '$1')))))\n    .replace(/&amp;/g, '&')\n    .replace(/\\s+/g, ' ')\n    .trim();\n\n// Pull the first occurrence of <tag>…</tag>, CDATA-aware.\nconst tag = (block, name) => {\n  const m = block.match(\n    new RegExp(`<(?:\\\\w+:)?${name}[^>]*>([\\\\s\\\\S]*?)</(?:\\\\w+:)?${name}>`, 'i')\n  );\n  return m ? strip(m[1]) : '';\n};\n\n// Atom links are attributes, not text: <link rel=\"alternate\" href=\"...\"/>\nconst atomLink = (block) => {\n  const alternate = block.match(\n    /<link[^>]*rel=[\"']alternate[\"'][^>]*href=[\"']([^\"']+)[\"']/i\n  );\n  if (alternate) return alternate[1];\n  const any = block.match(/<link[^>]*href=[\"']([^\"']+)[\"']/i);\n  return any ? any[1] : '';\n};\n\nconst toIso = (value) => {\n  if (!value) return null;\n  const d = new Date(value);\n  return Number.isNaN(d.getTime()) ? null : d.toISOString();\n};\n\nconst out = [];\n\nfor (let i = 0; i < Math.min(sources.length, responses.length); i++) {\n  const source = sources[i];\n  const body = responses[i].json?.data ?? responses[i].json?.body ?? '';\n\n  if (typeof body !== 'string' || body.length === 0) {\n    console.warn(`Empty response from \"${source.name}\" — skipping this feed.`);\n    continue;\n  }\n\n  // RSS uses <item>, Atom uses <entry>. Accept both in one pass.\n  const blocks = body.match(/<(item|entry)[\\s>][\\s\\S]*?<\\/\\1>/gi) ?? [];\n\n  if (blocks.length === 0) {\n    console.warn(`No entries parsed from \"${source.name}\" — feed may have moved.`);\n    continue;\n  }\n\n  for (const block of blocks) {\n    const isAtom = /^<entry[\\s>]/i.test(block);\n    const link = isAtom ? atomLink(block) : tag(block, 'link');\n    const title = tag(block, 'title');\n\n    // A GUID we control: prefer the feed's own, fall back to the link, then the\n    // title. Whatever we pick becomes the dedupe key forever, so it must be\n    // stable across runs — never use a timestamp or a hash of the body.\n    const guid = tag(block, 'guid') || tag(block, 'id') || link || title;\n    if (!guid || !title) continue;\n\n    const summary =\n      tag(block, 'description') ||\n      tag(block, 'summary') ||\n      tag(block, 'content') ||\n      '';\n\n    out.push({\n      json: {\n        source_id: source.id,\n        niche: source.niche,\n        source_name: source.name,\n        source_context: source.context ?? '',\n        guid: guid.slice(0, 500),\n        title: title.slice(0, 500),\n        link: (link || '').slice(0, 1000),\n        published_at: toIso(\n          tag(block, 'pubDate') || tag(block, 'published') || tag(block, 'updated')\n        ),\n        raw_summary: summary.slice(0, 4000),\n      },\n    });\n  }\n}\n\nconsole.log(`Parsed ${out.length} items from ${sources.length} sources.`);\nreturn out;"
+      },
+      "id": "parse-feeds",
+      "name": "Parse Feeds",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          180,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// PostgREST inserts an array in one round trip, so collapse the stream into a\n// single item whose body is that array.\n//\n// Cutoff: ignore anything older than LOOKBACK_DAYS. Without it, adding a new\n// source floods the first digest with that feed's entire back catalogue.\nconst lookbackDays = Number($env.LOOKBACK_DAYS || 14);\nconst cutoff = Date.now() - lookbackDays * 24 * 60 * 60 * 1000;\n\nconst seen = new Set();\nconst rows = [];\n\nfor (const item of $input.all()) {\n  const r = item.json;\n\n  // Same story can appear in two feeds; the DB constraint is per-source, so\n  // dedupe within the batch on the link as well.\n  const dedupeKey = r.link || `${r.source_id}:${r.guid}`;\n  if (seen.has(dedupeKey)) continue;\n  seen.add(dedupeKey);\n\n  if (r.published_at && new Date(r.published_at).getTime() < cutoff) continue;\n\n  rows.push({\n    source_id: r.source_id,\n    niche: r.niche,\n    guid: r.guid,\n    title: r.title,\n    link: r.link,\n    published_at: r.published_at,\n    raw_summary: r.raw_summary,\n  });\n}\n\nconsole.log(`${rows.length} candidate rows after cutoff and in-batch dedupe.`);\nreturn [{ json: { rows, count: rows.length } }];"
+      },
+      "id": "collect-rows",
+      "name": "Collect Rows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          380,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=ignore-duplicates,return=representation"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "on_conflict",
+              "value": "source_id,guid"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.rows) }}"
+      },
+      "id": "insert-new-items",
+      "name": "Insert New Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          580,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// PostgREST with \"resolution=ignore-duplicates,return=representation\" returns\n// ONLY the rows it actually inserted. That response is the new-items list —\n// the dedupe is done, with no read query anywhere in the pipeline.\nconst first = $input.first()?.json;\nconst inserted = Array.isArray(first) ? first : (first?.data ?? []);\n\nconst rows = Array.isArray(inserted) ? inserted : [];\nconsole.log(`${rows.length} genuinely new items this run.`);\nreturn [{ json: { rows, count: rows.length } }];"
+      },
+      "id": "collect-inserted",
+      "name": "Collect Inserted",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          780,
+          300
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-new-items",
+              "leftValue": "={{ $json.count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "any-new-items",
+      "name": "Any New Items?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        980,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Builds the Anthropic request. Prompt source of truth: lib/scoring-prompt.md —\n// keep the two in sync when editing.\nconst niche = {\n  name: $env.NICHE_NAME || 'the briefing',\n  audience: $env.NICHE_AUDIENCE || 'busy professionals in this field',\n  include: ($env.NICHE_INCLUDE || '').split('|').filter(Boolean),\n  exclude: ($env.NICHE_EXCLUDE || '').split('|').filter(Boolean),\n};\n\nconst all = $json.rows;\n// Cap the batch so one noisy week cannot produce an unbounded bill.\nconst maxScore = Number($env.MAX_ITEMS_SCORED || 60);\nconst rows = all.slice(0, maxScore);\nif (all.length > rows.length) {\n  console.warn(`Scoring ${rows.length} of ${all.length} items (MAX_ITEMS_SCORED).`);\n}\n\nconst bullets = (list, fallback) =>\n  list.length ? list.map((r) => `- ${r}`).join('\\n') : fallback;\n\nconst system = [\n  `You are the editor of ${niche.name}, a paid weekly briefing.`,\n  '',\n  `Your readers: ${niche.audience}`,\n  '',\n  'Your job is to triage raw feed items and keep only what a busy, expensive',\n  'reader would be annoyed to have missed. You are ruthless. A thin issue that',\n  \"respects the reader's time beats a padded one — most weeks, most items should\",\n  'be cut.',\n  '',\n  'Score each item 0-100 on how much it matters to this audience:',\n  '',\n  '  85-100  Changes what the reader must do. A deadline, a rule, an enforcement',\n  '          action against someone like them, a competitor move they must answer.',\n  '  65-84   Changes what the reader should know. Real development, clear',\n  '          implication, but no forced action this quarter.',\n  '  40-64   Context. True and on-topic, but the reader loses nothing by skipping.',\n  '  0-39    Noise. Cut it.',\n  '',\n  'Count as relevant:',\n  bullets(niche.include, '- Anything with a concrete consequence for the reader'),\n  '',\n  'Do NOT count as relevant, regardless of how on-topic the headline looks:',\n  bullets(niche.exclude, '- Conference announcements, job postings, pure opinion'),\n  '',\n  'For each item you mark relevant, write:',\n  '',\n  '  summary — 2 to 3 sentences. Lead with what actually happened, then the',\n  '            consequence for this audience. Plain declarative sentences. No',\n  '            \"this article discusses\", no hedging, no adjectives doing work',\n  '            that facts should do. If the source text is too thin to say what',\n  '            happened, mark the item not relevant rather than padding.',\n  '',\n  '  why     — one short clause naming who this lands on and what it changes.',\n  '',\n  '  tags    — 1 to 3 lowercase keywords.',\n  '',\n  'Never invent facts, dates, figures, or names that are not in the item text you',\n  'were given. If a detail is missing, leave it out. A summary that omits the',\n  'deadline is fine; one that guesses the deadline is not.',\n].join('\\n');\n\nconst candidates = rows.map((r) => ({\n  id: r.id,\n  title: r.title,\n  source: r.source_name ?? '',\n  published_at: r.published_at,\n  text: String(r.raw_summary ?? '').slice(0, 1200),\n}));\n\nreturn [\n  {\n    json: {\n      request: {\n        model: $env.ANTHROPIC_MODEL || 'claude-opus-5',\n        max_tokens: 8000,\n        system,\n        // effort:low — triage against an explicit rubric is not reasoning-heavy.\n        // Do NOT disable thinking to save cost; lower effort is the right lever.\n        output_config: {\n          effort: 'low',\n          format: {\n            type: 'json_schema',\n            schema: {\n              type: 'object',\n              properties: {\n                items: {\n                  type: 'array',\n                  items: {\n                    type: 'object',\n                    properties: {\n                      id: { type: 'string' },\n                      relevant: { type: 'boolean' },\n                      score: { type: 'integer' },\n                      summary: { type: 'string' },\n                      why: { type: 'string' },\n                      tags: { type: 'array', items: { type: 'string' } },\n                    },\n                    required: ['id', 'relevant', 'score', 'summary', 'why', 'tags'],\n                    additionalProperties: false,\n                  },\n                },\n              },\n              required: ['items'],\n              additionalProperties: false,\n            },\n          },\n        },\n        messages: [\n          {\n            role: 'user',\n            content:\n              'Triage these items. Return one entry per input id.\\n\\n' +\n              JSON.stringify(candidates, null, 2),\n          },\n        ],\n      },\n      rows,\n    },\n  },\n];"
+      },
+      "id": "build-scoring-request",
+      "name": "Build Scoring Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          1180,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "timeout": 300000
+        },
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.request) }}"
+      },
+      "id": "score-items",
+      "name": "Score Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          1380,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Merges model scores back onto the rows, picks the cut, and renders the email.\nconst response = $json;\nconst rows = $('Build Scoring Request').first().json.rows;\n\n// Structured outputs guarantee the shape, but a refusal or a max_tokens stop\n// still has to be caught before we index into content.\nif (response.stop_reason === 'refusal') {\n  throw new Error(\n    'Scoring call was refused by safety classifiers. Nothing was sent. ' +\n      'Category: ' + (response.stop_details?.category ?? 'unknown')\n  );\n}\nif (response.stop_reason === 'max_tokens') {\n  throw new Error(\n    'Scoring response hit max_tokens and is truncated. Lower MAX_ITEMS_SCORED ' +\n      'or raise max_tokens, then re-run. Nothing was sent.'\n  );\n}\n\nconst textBlock = (response.content ?? []).find((b) => b.type === 'text');\nif (!textBlock) throw new Error('No text block in scoring response.');\n\nconst scored = JSON.parse(textBlock.text).items ?? [];\nconst byId = new Map(scored.map((s) => [s.id, s]));\n\nconst minScore = Number($env.MIN_SCORE || 55);\nconst maxItems = Number($env.MAX_ITEMS || 10);\n\nconst clamp = (n) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));\n\nconst enriched = rows\n  .map((r) => {\n    const s = byId.get(r.id);\n    if (!s) return null;\n    return {\n      ...r,\n      relevant: Boolean(s.relevant),\n      score: clamp(s.score),\n      llm_summary: String(s.summary ?? '').trim(),\n      why: String(s.why ?? '').trim(),\n      tags: Array.isArray(s.tags) ? s.tags.slice(0, 3).map(String) : [],\n    };\n  })\n  .filter(Boolean);\n\nconst selected = enriched\n  .filter((r) => r.relevant && r.score >= minScore && r.llm_summary)\n  .sort((a, b) => b.score - a.score)\n  .slice(0, maxItems);\n\n// Every scored row is written back (not just the selected ones) so the archive\n// records what was considered and rejected. That history is what lets you tune\n// MIN_SCORE against real data instead of guessing.\nconst scoreUpdates = enriched.map((r) => ({\n  id: r.id,\n  source_id: r.source_id,\n  niche: r.niche,\n  guid: r.guid,\n  title: r.title,\n  link: r.link,\n  published_at: r.published_at,\n  raw_summary: r.raw_summary,\n  relevant: r.relevant,\n  score: r.score,\n  llm_summary: r.llm_summary,\n  why: r.why,\n  tags: r.tags,\n  scored_at: new Date().toISOString(),\n}));\n\nconst tz = $env.NICHE_TZ || 'UTC';\nconst now = new Date();\nconst digestDate = new Intl.DateTimeFormat('en-CA', {\n  timeZone: tz,\n  year: 'numeric',\n  month: '2-digit',\n  day: '2-digit',\n}).format(now);\nconst prettyDate = new Intl.DateTimeFormat('en-GB', {\n  timeZone: tz,\n  day: 'numeric',\n  month: 'long',\n  year: 'numeric',\n}).format(now);\n\nconst esc = (s) =>\n  String(s ?? '')\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;');\n\nconst brand = $env.NICHE_NAME || 'Signalcast';\nconst intro = $env.NICHE_INTRO || '';\n\nconst entries = selected\n  .map(\n    (r, i) => `\n      <tr><td style=\"padding:0 0 28px 0;\">\n        <div style=\"font:600 12px/1.4 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#8a8a8a;letter-spacing:.06em;text-transform:uppercase;\">\n          ${String(i + 1).padStart(2, '0')} &middot; ${esc(r.source_name ?? '')}\n        </div>\n        <div style=\"margin:6px 0 8px;font:600 18px/1.35 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;\">\n          <a href=\"${esc(r.link)}\" style=\"color:#111;text-decoration:none;\">${esc(r.title)}</a>\n        </div>\n        <div style=\"font:400 15px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#333;\">\n          ${esc(r.llm_summary)}\n        </div>\n        <div style=\"margin-top:8px;font:400 13px/1.5 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#666;\">\n          <strong style=\"color:#111;\">Why it matters:</strong> ${esc(r.why)}\n        </div>\n      </td></tr>`\n  )\n  .join('');\n\n// {{UNSUB_URL}} is substituted per subscriber in Build Sends — the digest row\n// stored in Postgres deliberately keeps the placeholder, so one stored digest\n// serves every recipient.\nconst html = `<!doctype html>\n<html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(brand)}</title></head>\n<body style=\"margin:0;padding:0;background:#faf9f7;\">\n<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#faf9f7;\">\n<tr><td align=\"center\" style=\"padding:32px 16px;\">\n<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:620px;background:#fff;border:1px solid #e8e5e0;\">\n<tr><td style=\"padding:32px 32px 8px;border-bottom:1px solid #e8e5e0;\">\n  <div style=\"font:600 20px/1.3 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#111;\">${esc(brand)}</div>\n  <div style=\"margin:4px 0 20px;font:400 13px/1.5 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#8a8a8a;\">${esc(prettyDate)} &middot; ${selected.length} item${selected.length === 1 ? '' : 's'}</div>\n</td></tr>\n${intro ? `<tr><td style=\"padding:24px 32px 0;font:400 15px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#444;\">${esc(intro)}</td></tr>` : ''}\n<tr><td style=\"padding:28px 32px 4px;\">\n  <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">${entries}</table>\n</td></tr>\n<tr><td style=\"padding:20px 32px 28px;border-top:1px solid #e8e5e0;font:400 12px/1.6 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#8a8a8a;\">\n  You are receiving this because you subscribed to ${esc(brand)}.<br>\n  <a href=\"{{UNSUB_URL}}\" style=\"color:#8a8a8a;\">Unsubscribe</a> &middot; ${esc($env.SENDER_POSTAL_ADDRESS || '')}\n</td></tr>\n</table></td></tr></table></body></html>`;\n\nconst subject = (\n  $env.NICHE_SUBJECT || `${brand} — {{date}}`\n).replace('{{date}}', prettyDate);\n\nconsole.log(\n  `Selected ${selected.length} of ${enriched.length} scored items (min_score=${minScore}).`\n);\n\nreturn [\n  {\n    json: {\n      digest: { niche: rows[0]?.niche ?? 'default', digest_date: digestDate, subject, html, item_count: selected.length },\n      scoreUpdates,\n      selectedCount: selected.length,\n    },\n  },\n];"
+      },
+      "id": "merge-scores",
+      "name": "Merge Scores",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          1580,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "on_conflict",
+              "value": "source_id,guid"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.scoreUpdates) }}"
+      },
+      "id": "save-scores",
+      "name": "Save Scores",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          1780,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/digests",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=representation"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "on_conflict",
+              "value": "niche,digest_date"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify([$('Merge Scores').first().json.digest]) }}"
+      },
+      "id": "save-digest",
+      "name": "Save Digest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          1980,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/subscribers",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "select",
+              "value": "id,email,unsub_token"
+            },
+            {
+              "name": "niche",
+              "value": "=eq.{{ $env.NICHE_SLUG }}"
+            },
+            {
+              "name": "status",
+              "value": "eq.active"
+            }
+          ]
+        }
+      },
+      "id": "fetch-subscribers",
+      "name": "Fetch Subscribers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          2180,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Fan out: one output item per deliverable subscriber.\nconst subsRaw = $input.first()?.json;\nconst subscribers = Array.isArray(subsRaw) ? subsRaw : (subsRaw?.data ?? []);\n\nconst digestRaw = $('Save Digest').first().json;\nconst digest = Array.isArray(digestRaw) ? digestRaw[0] : (digestRaw?.data?.[0] ?? digestRaw);\n\nif (!digest?.id) throw new Error('No digest id returned from Save Digest — aborting before send.');\n\nconst base = ($env.PUBLIC_BASE_URL || '').replace(/\\/+$/, '');\nconst from = $env.SENDER_FROM || 'briefing@example.com';\nconst replyTo = $env.SENDER_REPLY_TO || from;\n\nconst out = [];\nfor (const s of subscribers) {\n  if (!s?.email || !s?.unsub_token) continue;\n\n  const unsubUrl = `${base}/unsubscribe?token=${encodeURIComponent(s.unsub_token)}`;\n\n  out.push({\n    json: {\n      digest_id: digest.id,\n      subscriber_id: s.id,\n      payload: {\n        from,\n        to: [s.email],\n        reply_to: replyTo,\n        subject: digest.subject,\n        html: String(digest.html).split('{{UNSUB_URL}}').join(unsubUrl),\n        // RFC 8058: lets Gmail/Apple show a native Unsubscribe button. Materially\n        // improves deliverability, and it is the law in several jurisdictions.\n        headers: {\n          'List-Unsubscribe': `<${unsubUrl}>`,\n          'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',\n        },\n      },\n    },\n  });\n}\n\nconsole.log(`Sending to ${out.length} subscribers.`);\nreturn out;"
+      },
+      "id": "build-sends",
+      "name": "Build Sends",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          2380,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "batching": {
+            "batch": {
+              "batchSize": 2,
+              "batchInterval": 1200
+            }
+          }
+        },
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.payload) }}"
+      },
+      "id": "send-email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          2580,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Runs once per send. The unique (digest_id, subscriber_id) constraint means a\n// re-run of this workflow for the same digest cannot double-log; combined with\n// the unique (niche, digest_date) on digests, a same-day re-run reuses the\n// digest row rather than creating a second one.\nconst res = $json;\nconst ctx = $('Build Sends').item.json;\n\nreturn [\n  {\n    json: {\n      digest_id: ctx.digest_id,\n      subscriber_id: ctx.subscriber_id,\n      provider_message_id: res?.id ?? null,\n      status: res?.id ? 'sent' : 'failed',\n      error: res?.id ? null : JSON.stringify(res ?? {}).slice(0, 500),\n    },\n  },\n];"
+      },
+      "id": "prepare-send-log",
+      "name": "Prepare Send Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          2780,
+          200
+        ],
+        "runOnceForEachItem"
+      ]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/rest/v1/sends",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.SUPABASE_SERVICE_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "on_conflict",
+              "value": "digest_id,subscriber_id"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify([$json]) }}"
+      },
+      "id": "log-send",
+      "name": "Log Send",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        [
+          2980,
+          200
+        ],
+        null
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "console.log('No new items this run — nothing sent. This is normal for a quiet week.');\nreturn [{ json: { skipped: true, reason: 'no new items' } }];"
+      },
+      "id": "no-new-items",
+      "name": "No New Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        [
+          1180,
+          420
+        ],
+        null
+      ]
+    }
+  ],
+  "connections": {
+    "Weekly Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Sources": {
+      "main": [
+        [
+          {
+            "node": "Normalize Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Sources": {
+      "main": [
+        [
+          {
+            "node": "Fetch Feed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Feed": {
+      "main": [
+        [
+          {
+            "node": "Parse Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Feeds": {
+      "main": [
+        [
+          {
+            "node": "Collect Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Rows": {
+      "main": [
+        [
+          {
+            "node": "Insert New Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert New Items": {
+      "main": [
+        [
+          {
+            "node": "Collect Inserted",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect Inserted": {
+      "main": [
+        [
+          {
+            "node": "Any New Items?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any New Items?": {
+      "main": [
+        [
+          {
+            "node": "Build Scoring Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No New Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Scoring Request": {
+      "main": [
+        [
+          {
+            "node": "Score Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score Items": {
+      "main": [
+        [
+          {
+            "node": "Merge Scores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Scores": {
+      "main": [
+        [
+          {
+            "node": "Save Scores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Scores": {
+      "main": [
+        [
+          {
+            "node": "Save Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Digest": {
+      "main": [
+        [
+          {
+            "node": "Fetch Subscribers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Subscribers": {
+      "main": [
+        [
+          {
+            "node": "Build Sends",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Sends": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Prepare Send Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Send Log": {
+      "main": [
+        [
+          {
+            "node": "Log Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}

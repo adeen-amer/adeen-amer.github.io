@@ -1,0 +1,10 @@
+# Secrets — never commit
+.env
+.env.generated
+
+# Local dry-run output
+preview.html
+
+node_modules/
+npm-debug.log*
+.DS_Store

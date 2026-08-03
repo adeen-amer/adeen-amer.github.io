@@ -1,0 +1,21 @@
+{
+  "name": "signalcast",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A niche monitoring digest built on n8n: watch sources, triage with Claude, email a paid weekly briefing.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build-workflows.mjs",
+    "test": "node scripts/test-parser.mjs",
+    "seed": "node scripts/apply-niche.mjs",
+    "preview": "node scripts/preview-digest.mjs",
+    "check": "npm run build && npm run test"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0",
+    "yaml": "^2.5.1"
+  }
+}

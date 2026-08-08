@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="disc-title disc-desc">
+  <title id="disc-title">Discovery-to-delivery diagram</title>
+  <desc id="disc-desc">Diagram showing an opportunity assessment (user, metric, time-box) feeding a backlog / in-progress / shipped board.</desc>
+  <style>
+    .spec-eyebrow { font: 600 20px "Inter", system-ui, -apple-system, sans-serif; letter-spacing: 0.04em; fill: #404040; }
+    .spec-title { font: 700 30px "Inter", system-ui, -apple-system, sans-serif; fill: #0a0a0a; }
+    .spec-note { font: 400 19px "Inter", system-ui, -apple-system, sans-serif; fill: #262626; }
+    .spec-note-muted { font: 400 17px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; }
+    .spec-num { font: 700 17px "Inter", system-ui, -apple-system, sans-serif; fill: #fafafa; }
+    .col-label { font: 600 16px "Inter", system-ui, -apple-system, sans-serif; fill: #404040; letter-spacing: 0.03em; }
+    .field-label { font: 600 13px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; letter-spacing: 0.04em; }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="750" fill="#ffffff" />
+
+  <text x="64" y="66" class="spec-eyebrow">DISCOVERY SPEC · PRODUCT</text>
+  <text x="64" y="100" class="spec-title">Opportunity assessment → delivery</text>
+
+  <!-- opportunity assessment card -->
+  <rect x="64" y="150" width="260" height="230" rx="12" fill="#fafafa" stroke="#0a0a0a" stroke-width="2.5" />
+  <text x="84" y="180" font="700 16px 'Inter', system-ui, sans-serif" fill="#0a0a0a">Opportunity assessment</text>
+  <line x1="84" y1="192" x2="304" y2="192" stroke="#d4d4d4" stroke-width="1" />
+
+  <text x="84" y="220" class="field-label">USER</text>
+  <rect x="84" y="228" width="200" height="10" rx="5" fill="#262626" />
+
+  <text x="84" y="266" class="field-label">METRIC</text>
+  <rect x="84" y="274" width="160" height="10" rx="5" fill="#262626" />
+
+  <text x="84" y="312" class="field-label">TIME-BOX</text>
+  <rect x="84" y="320" width="120" height="10" rx="5" fill="#262626" />
+
+  <text x="84" y="356" class="field-label">SIGNAL</text>
+  <rect x="84" y="364" width="60" height="20" rx="10" fill="#0a0a0a" />
+  <text x="114" y="378" font="600 11px 'Inter', system-ui, sans-serif" fill="#fafafa" text-anchor="middle">KILL</text>
+  <rect x="152" y="364" width="70" height="20" rx="10" fill="none" stroke="#0a0a0a" stroke-width="1.5" />
+  <text x="187" y="378" font="600 11px 'Inter', system-ui, sans-serif" fill="#0a0a0a" text-anchor="middle">SCALE</text>
+
+  <!-- arrow -->
+  <line x1="340" y1="265" x2="410" y2="265" stroke="#0a0a0a" stroke-width="2" />
+  <path d="M400 257 L412 265 L400 273" fill="none" stroke="#0a0a0a" stroke-width="2" />
+
+  <!-- kanban board -->
+  <text x="440" y="168" class="col-label">BACKLOG</text>
+  <rect x="440" y="180" width="150" height="36" rx="8" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1" />
+  <rect x="440" y="226" width="150" height="36" rx="8" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1" />
+  <rect x="440" y="272" width="150" height="36" rx="8" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1" />
+
+  <text x="620" y="168" class="col-label">IN PROGRESS</text>
+  <rect x="620" y="180" width="150" height="36" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="2" />
+  <rect x="620" y="226" width="150" height="36" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="2" />
+
+  <text x="800" y="168" class="col-label">SHIPPED</text>
+  <rect x="800" y="180" width="150" height="36" rx="8" fill="#0a0a0a" />
+  <rect x="800" y="226" width="150" height="36" rx="8" fill="#0a0a0a" />
+  <rect x="800" y="272" width="150" height="36" rx="8" fill="#0a0a0a" />
+  <rect x="800" y="318" width="150" height="36" rx="8" fill="#0a0a0a" />
+
+  <line x1="616" y1="150" x2="616" y2="380" stroke="#d4d4d4" stroke-width="1" />
+  <line x1="796" y1="150" x2="796" y2="380" stroke="#d4d4d4" stroke-width="1" />
+
+  <!-- feedback loop arrow from shipped back to opportunity card -->
+  <path d="M875 358 C 875 500, 194 500, 194 400" fill="none" stroke="#a3a3a3" stroke-width="1.5" stroke-dasharray="4 4" />
+  <path d="M187 410 L194 400 L203 409" fill="none" stroke="#a3a3a3" stroke-width="1.5" />
+  <text x="530" y="490" class="spec-note-muted" text-anchor="middle">post-launch review confirms or kills the assumption</text>
+
+  <!-- annotations -->
+  <text x="64" y="540" class="spec-note" font-weight="600">① Falsifiable, not vague</text>
+  <text x="64" y="564" class="spec-note-muted">Every bet names a user, a metric and a</text>
+  <text x="64" y="586" class="spec-note-muted">time-box before it enters the backlog.</text>
+
+  <text x="440" y="540" class="spec-note" font-weight="600">② Thin vertical slices</text>
+  <text x="440" y="564" class="spec-note-muted">Story maps split bets into slices that ship</text>
+  <text x="440" y="586" class="spec-note-muted">on their own, not horizontal layers.</text>
+
+  <text x="800" y="540" class="spec-note" font-weight="600">③ Evidence closes the loop</text>
+  <text x="800" y="564" class="spec-note-muted">Shipped work feeds the next round of</text>
+  <text x="800" y="586" class="spec-note-muted">opportunity assessments.</text>
+
+  <text x="64" y="650" class="spec-note-muted">Illustrative process diagram, not a screenshot of any specific tool.</text>
+</svg>

@@ -16,9 +16,9 @@
       "tagline": "Healthcare mobile experience — research through UI craft.",
       "featured": true,
       "categories": ["product", "creative"],
-      "thumb": "assets/img/masonry-portfolio/portfolio-1.png",
+      "thumb": "assets/img/dawai-lo/hero.svg",
       "href": "projects/dawai-lo.html",
-      "imageAlt": "Dawai Lo healthcare app interface mockups"
+      "imageAlt": "Annotated wireframe of the Dawai Lo home screen"
     },
     {
       "id": "marketplace",
@@ -26,18 +26,18 @@
       "tagline": "Shipping clarity and trust on high-volume listing flows.",
       "featured": true,
       "categories": ["product"],
-      "thumb": "assets/img/masonry-portfolio/portfolio-5.png",
+      "thumb": "assets/img/marketplace-experience/hero.svg",
       "href": "projects/marketplace-experience.html",
-      "imageAlt": "E-commerce seller dashboard concept"
+      "imageAlt": "Process diagram of a marketplace listing flow with fees shown upfront"
     },
     {
       "id": "discovery",
       "title": "Discovery to delivery",
       "tagline": "Roadmaps, backlogs and rituals that keep teams aligned.",
       "categories": ["product"],
-      "thumb": "assets/img/masonry-portfolio/portfolio-2.png",
+      "thumb": "assets/img/product-discovery/hero.svg",
       "href": "projects/product-discovery.html",
-      "imageAlt": "Product roadmap and backlog workshop artifacts"
+      "imageAlt": "Diagram of an opportunity assessment feeding a backlog and delivery board"
     },
     {
       "id": "data-decisions",
@@ -45,18 +45,18 @@
       "tagline": "Dashboards, forecasting and narratives for stakeholders.",
       "featured": true,
       "categories": ["data", "product"],
-      "thumb": "assets/img/masonry-portfolio/portfolio-4.png",
+      "thumb": "assets/img/data-to-decisions/hero.svg",
       "href": "projects/data-to-decisions.html",
-      "imageAlt": "Financial analytics dashboard visualisation"
+      "imageAlt": "Diagram of a health status readout above a forecast band chart"
     },
     {
       "id": "creative",
       "title": "Creative production",
       "tagline": "Music, motion and live experiences for engaged audiences.",
       "categories": ["creative"],
-      "thumb": "assets/img/masonry-portfolio/portfolio-3.png",
+      "thumb": "assets/img/creative-production/hero-music.svg",
       "href": "projects/creative-production.html",
-      "imageAlt": "Music production session in digital audio workstation"
+      "imageAlt": "Diagram of a multi-track music arrangement with a reference-track marker"
     }
   ]
 }

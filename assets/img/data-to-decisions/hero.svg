@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="dtd-title dtd-desc">
+  <title id="dtd-title">Forecast band chart diagram</title>
+  <desc id="dtd-desc">Diagram of an executive dashboard: a health status readout above a sales history line that continues as a shaded forecast band rather than a single point estimate.</desc>
+  <style>
+    .spec-eyebrow { font: 600 20px "Inter", system-ui, -apple-system, sans-serif; letter-spacing: 0.04em; fill: #404040; }
+    .spec-title { font: 700 30px "Inter", system-ui, -apple-system, sans-serif; fill: #0a0a0a; }
+    .spec-note { font: 400 19px "Inter", system-ui, -apple-system, sans-serif; fill: #262626; }
+    .spec-note-muted { font: 400 17px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; }
+    .card-label { font: 600 13px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; letter-spacing: 0.04em; }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="750" fill="#ffffff" />
+
+  <text x="64" y="66" class="spec-eyebrow">ANALYTICS SPEC · DATA</text>
+  <text x="64" y="100" class="spec-title">Forecast band, not a point estimate</text>
+
+  <!-- chart axes -->
+  <line x1="120" y1="480" x2="1136" y2="480" stroke="#d4d4d4" stroke-width="1.5" />
+  <line x1="120" y1="180" x2="120" y2="480" stroke="#d4d4d4" stroke-width="1.5" />
+
+  <!-- history line (solid) -->
+  <polyline points="120,420 200,400 280,410 360,360 440,380 520,330 600,340"
+    fill="none" stroke="#0a0a0a" stroke-width="3" />
+
+  <!-- forecast band (shaded) -->
+  <polygon points="600,300 700,270 800,250 900,230 1000,200 1100,180 1100,400 1000,360 900,340 800,320 700,300 600,340"
+    fill="#f5f5f5" stroke="none" />
+  <!-- forecast center line (dashed) -->
+  <polyline points="600,340 700,300 800,290 900,280 1000,270 1100,260"
+    fill="none" stroke="#0a0a0a" stroke-width="2" stroke-dasharray="6 5" />
+  <!-- band edges -->
+  <polyline points="600,300 700,270 800,250 900,230 1000,200 1100,180" fill="none" stroke="#a3a3a3" stroke-width="1" />
+  <polyline points="600,340 700,300 800,320 900,340 1000,360 1100,400" fill="none" stroke="#a3a3a3" stroke-width="1" />
+
+  <line x1="600" y1="180" x2="600" y2="480" stroke="#d4d4d4" stroke-width="1" stroke-dasharray="3 3" />
+  <text x="600" y="500" text-anchor="middle" class="card-label">TODAY</text>
+  <text x="360" y="500" text-anchor="middle" class="card-label">HISTORY</text>
+  <text x="880" y="500" text-anchor="middle" class="card-label">FORECAST BAND</text>
+
+  <!-- status card (drawn last so it sits cleanly above the chart) -->
+  <rect x="900" y="140" width="236" height="90" rx="12" fill="#ffffff" stroke="#0a0a0a" stroke-width="2" />
+  <text x="924" y="166" class="card-label">ARE WE HEALTHY?</text>
+  <circle cx="932" cy="192" r="6" fill="#0a0a0a" />
+  <text x="948" y="197" font="700 18px 'Inter', system-ui, sans-serif" fill="#0a0a0a">On track</text>
+  <polyline points="1030,206 1046,196 1062,200 1078,188 1094,192 1110,180"
+    fill="none" stroke="#0a0a0a" stroke-width="2" />
+
+  <!-- annotations -->
+  <text x="64" y="560" class="spec-note" font-weight="600">① Health first, drill-downs second</text>
+  <text x="64" y="584" class="spec-note-muted">The first screen answers "are we healthy?"</text>
+  <text x="64" y="606" class="spec-note-muted">before any table loads.</text>
+
+  <text x="440" y="560" class="spec-note" font-weight="600">② A band, not false precision</text>
+  <text x="440" y="584" class="spec-note-muted">Forecasts show a range stakeholders can</text>
+  <text x="440" y="606" class="spec-note-muted">trust, not a single brittle number.</text>
+
+  <text x="820" y="560" class="spec-note" font-weight="600">③ The "so what" test</text>
+  <text x="820" y="584" class="spec-note-muted">Metrics nobody can act on in two weeks</text>
+  <text x="820" y="606" class="spec-note-muted">get deleted, not decorated.</text>
+
+  <text x="64" y="666" class="spec-note-muted">Illustrative dashboard — representative of the analysis, not a screenshot of proprietary tooling.</text>
+</svg>

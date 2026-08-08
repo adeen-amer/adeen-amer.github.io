@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="dawai-lo-title dawai-lo-desc">
+  <title id="dawai-lo-title">Dawai Lo UI spec diagram</title>
+  <desc id="dawai-lo-desc">Annotated wireframe of the Dawai Lo home screen: a single "next dose" card above secondary rows for appointments and help, with history and education tucked one tap away.</desc>
+  <style>
+    .spec-eyebrow { font: 600 20px "Inter", system-ui, -apple-system, sans-serif; letter-spacing: 0.04em; fill: #404040; }
+    .spec-title { font: 700 30px "Inter", system-ui, -apple-system, sans-serif; fill: #0a0a0a; }
+    .spec-note { font: 400 19px "Inter", system-ui, -apple-system, sans-serif; fill: #262626; }
+    .spec-note-muted { font: 400 17px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; }
+    .spec-num { font: 700 17px "Inter", system-ui, -apple-system, sans-serif; fill: #fafafa; }
+  </style>
+
+  <rect x="0" y="0" width="1200" height="750" fill="#ffffff" />
+
+  <text x="64" y="66" class="spec-eyebrow">UI SPEC · MOBILE</text>
+  <text x="64" y="100" class="spec-title">Dawai Lo — home surface</text>
+
+  <!-- phone frame -->
+  <rect x="120" y="130" width="300" height="560" rx="34" fill="#ffffff" stroke="#0a0a0a" stroke-width="3" />
+  <rect x="140" y="164" width="260" height="460" rx="14" fill="#fafafa" stroke="#d4d4d4" stroke-width="1.5" />
+  <circle cx="270" cy="148" r="4" fill="#d4d4d4" />
+
+  <!-- app label -->
+  <text x="160" y="196" class="spec-note" font-weight="700">Dawai Lo</text>
+  <text x="330" y="196" class="spec-note-muted" text-anchor="end">9:41</text>
+  <line x1="160" y1="210" x2="380" y2="210" stroke="#d4d4d4" stroke-width="1" />
+
+  <!-- primary card: next dose -->
+  <rect x="160" y="228" width="220" height="118" rx="12" fill="#ffffff" stroke="#0a0a0a" stroke-width="2.5" />
+  <circle cx="188" cy="256" r="12" fill="none" stroke="#0a0a0a" stroke-width="2" />
+  <rect x="182" y="250" width="12" height="12" rx="2" fill="#0a0a0a" />
+  <rect x="210" y="248" width="120" height="10" rx="5" fill="#262626" />
+  <rect x="210" y="266" width="80" height="8" rx="4" fill="#a3a3a3" />
+  <rect x="178" y="298" width="184" height="30" rx="8" fill="#0a0a0a" />
+  <rect x="196" y="308" width="70" height="10" rx="5" fill="#fafafa" />
+
+  <!-- secondary rows -->
+  <rect x="160" y="360" width="220" height="46" rx="10" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1" />
+  <rect x="178" y="378" width="90" height="9" rx="4.5" fill="#737373" />
+  <rect x="160" y="414" width="220" height="46" rx="10" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="1" />
+  <rect x="178" y="432" width="70" height="9" rx="4.5" fill="#737373" />
+
+  <!-- tab bar -->
+  <line x1="160" y1="588" x2="380" y2="588" stroke="#d4d4d4" stroke-width="1" />
+  <circle cx="200" cy="606" r="9" fill="#0a0a0a" />
+  <rect x="185" y="622" width="30" height="7" rx="3.5" fill="#0a0a0a" />
+  <circle cx="270" cy="606" r="9" fill="none" stroke="#a3a3a3" stroke-width="2" />
+  <rect x="252" y="622" width="36" height="7" rx="3.5" fill="#a3a3a3" />
+  <circle cx="340" cy="606" r="9" fill="none" stroke="#a3a3a3" stroke-width="2" />
+  <rect x="322" y="622" width="36" height="7" rx="3.5" fill="#a3a3a3" />
+
+  <!-- annotations -->
+  <line x1="380" y1="287" x2="470" y2="256" stroke="#a3a3a3" stroke-width="1.5" stroke-dasharray="4 4" />
+  <circle cx="484" cy="256" r="15" fill="#0a0a0a" />
+  <text x="484" y="261" class="spec-num" text-anchor="middle">1</text>
+  <text x="512" y="238" class="spec-note" font-weight="600">Progressive disclosure</text>
+  <text x="512" y="262" class="spec-note-muted">Only the next actionable dose sits</text>
+  <text x="512" y="284" class="spec-note-muted">on the home surface.</text>
+
+  <line x1="380" y1="383" x2="470" y2="383" stroke="#a3a3a3" stroke-width="1.5" stroke-dasharray="4 4" />
+  <circle cx="484" cy="383" r="15" fill="#0a0a0a" />
+  <text x="484" y="388" class="spec-num" text-anchor="middle">2</text>
+  <text x="512" y="365" class="spec-note" font-weight="600">One tap away</text>
+  <text x="512" y="389" class="spec-note-muted">History and education stay reachable</text>
+  <text x="512" y="411" class="spec-note-muted">without crowding the first screen.</text>
+
+  <line x1="380" y1="606" x2="470" y2="530" stroke="#a3a3a3" stroke-width="1.5" stroke-dasharray="4 4" />
+  <circle cx="484" cy="516" r="15" fill="#0a0a0a" />
+  <text x="484" y="521" class="spec-num" text-anchor="middle">3</text>
+  <text x="512" y="498" class="spec-note" font-weight="600">Persistent nav</text>
+  <text x="512" y="522" class="spec-note-muted">Caregivers switching between records</text>
+  <text x="512" y="544" class="spec-note-muted">and vitals never lose their place.</text>
+
+  <text x="512" y="640" class="spec-note-muted">Coursework HCI exercise — annotated flow, not a shipped screenshot.</text>
+</svg>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="music-title music-desc">
+  <title id="music-title">Music arrangement diagram</title>
+  <desc id="music-desc">Diagram of a multi-track arrangement — drums, bass, lead and vocal lanes as waveforms — with a reference-track marker.</desc>
+  <style>
+    .spec-eyebrow { font: 600 15px "Inter", system-ui, -apple-system, sans-serif; letter-spacing: 0.04em; fill: #404040; }
+    .spec-title { font: 700 22px "Inter", system-ui, -apple-system, sans-serif; fill: #0a0a0a; }
+    .track-label { font: 600 13px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; }
+    .spec-note-muted { font: 400 13px "Inter", system-ui, -apple-system, sans-serif; fill: #737373; }
+  </style>
+
+  <rect x="0" y="0" width="800" height="500" fill="#ffffff" />
+
+  <text x="40" y="46" class="spec-eyebrow">PRODUCTION SPEC · AUDIO</text>
+  <text x="40" y="72" class="spec-title">Arrangement before ear candy</text>
+
+  <!-- track lanes -->
+  <g>
+    <text x="40" y="112" class="track-label">DRUMS</text>
+    <rect x="120" y="96" width="640" height="26" fill="#f5f5f5" />
+    <g fill="#262626">
+      <rect x="130" y="102" width="4" height="14" /><rect x="140" y="100" width="4" height="18" /><rect x="150" y="104" width="4" height="10" /><rect x="160" y="99" width="4" height="20" /><rect x="170" y="103" width="4" height="12" /><rect x="180" y="101" width="4" height="16" /><rect x="190" y="105" width="4" height="8" /><rect x="200" y="99" width="4" height="20" /><rect x="210" y="102" width="4" height="14" /><rect x="220" y="100" width="4" height="18" /><rect x="230" y="104" width="4" height="10" /><rect x="240" y="99" width="4" height="20" /><rect x="250" y="103" width="4" height="12" /><rect x="260" y="101" width="4" height="16" /><rect x="270" y="105" width="4" height="8" /><rect x="280" y="99" width="4" height="20" /><rect x="290" y="102" width="4" height="14" /><rect x="300" y="100" width="4" height="18" /><rect x="310" y="104" width="4" height="10" /><rect x="320" y="99" width="4" height="20" /><rect x="330" y="103" width="4" height="12" /><rect x="340" y="101" width="4" height="16" /><rect x="350" y="105" width="4" height="8" /><rect x="360" y="99" width="4" height="20" />
+    </g>
+  </g>
+
+  <g>
+    <text x="40" y="152" class="track-label">BASS</text>
+    <rect x="120" y="136" width="640" height="26" fill="#f5f5f5" />
+    <polyline points="130,149 150,140 170,155 190,144 210,150 230,138 250,152 270,145 290,149 310,141 330,153 350,146 370,149 390,142 410,150 430,147 450,151 470,144 490,149"
+      fill="none" stroke="#404040" stroke-width="2" />
+  </g>
+
+  <g>
+    <text x="40" y="192" class="track-label">LEAD</text>
+    <rect x="120" y="176" width="640" height="26" fill="#f5f5f5" />
+    <polyline points="130,195 145,182 160,192 175,185 190,196 205,181 220,190 235,186 250,193 265,183 280,191 295,187 310,194 325,182 340,189 355,185 370,193 385,184 400,190 415,187 430,193 445,183 460,190 475,186 490,192 505,184 520,189 535,187 550,194 565,183 580,190"
+      fill="none" stroke="#0a0a0a" stroke-width="2.5" />
+  </g>
+
+  <g>
+    <text x="40" y="232" class="track-label">VOCAL</text>
+    <rect x="120" y="216" width="640" height="26" fill="#f5f5f5" />
+    <g fill="#a3a3a3">
+      <rect x="200" y="220" width="6" height="18" rx="3" /><rect x="212" y="223" width="6" height="12" rx="3" /><rect x="224" y="219" width="6" height="20" rx="3" /><rect x="236" y="225" width="6" height="8" rx="3" /><rect x="248" y="221" width="6" height="16" rx="3" /><rect x="400" y="220" width="6" height="18" rx="3" /><rect x="412" y="223" width="6" height="12" rx="3" /><rect x="424" y="219" width="6" height="20" rx="3" /><rect x="436" y="225" width="6" height="8" rx="3" /><rect x="448" y="221" width="6" height="16" rx="3" />
+    </g>
+  </g>
+
+  <line x1="120" y1="96" x2="120" y2="242" stroke="#d4d4d4" stroke-width="1" />
+
+  <!-- reference track marker -->
+  <rect x="590" y="270" width="190" height="72" rx="10" fill="#fafafa" stroke="#0a0a0a" stroke-width="2" />
+  <text x="608" y="294" font="600 12px 'Inter', system-ui, sans-serif" fill="#404040" letter-spacing="0.03em">REFERENCE TRACK</text>
+  <polyline points="608,320 622,312 636,318 650,308 664,314 678,306 692,316 706,310 720,315 734,309 748,318 762,312"
+    fill="none" stroke="#a3a3a3" stroke-width="1.5" stroke-dasharray="3 3" />
+
+  <line x1="590" y1="306" x2="500" y2="200" stroke="#a3a3a3" stroke-width="1.5" stroke-dasharray="4 4" />
+
+  <text x="40" y="400" font="600 15px 'Inter', system-ui, sans-serif" fill="#262626">Arrangement passes before ear candy</text>
+  <text x="40" y="424" class="spec-note-muted">Structure and dynamics get locked first; reference</text>
+  <text x="40" y="444" class="spec-note-muted">tracks keep loudness and tone decisions honest.</text>
+
+  <text x="40" y="480" class="spec-note-muted">Illustrative — not a screenshot of any specific DAW.</text>
+</svg>
